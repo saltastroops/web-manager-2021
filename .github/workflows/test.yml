@@ -12,6 +12,7 @@ jobs:
         with:
           python-version: 3.9
       - uses: Gr1N/setup-poetry@v4
+      - uses: actions/cache@v1
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
