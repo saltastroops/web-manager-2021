@@ -1,0 +1,7 @@
+site_name: SALT Web Manager
+
+markdown_extensions:
+  - admonition
+
+theme:
+  name: material

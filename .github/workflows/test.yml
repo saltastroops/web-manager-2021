@@ -1,0 +1,26 @@
+name: Test
+
+on: ["push", "pull_request"]
+
+jobs:
+  build:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+          python-version: 3.9
+      - uses: Gr1N/setup-poetry@v4
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+      - name: Install packages
+        working-directory: ./python
+        run: |
+          poetry install
+          poetry shell tox
+
+
