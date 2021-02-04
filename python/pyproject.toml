@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "web-manager"
+name = "app"
 version = "0.1.0"
 description = "SALT Web Manager"
 authors = ["Your Name <you@example.com>"]
