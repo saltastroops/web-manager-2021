@@ -108,7 +108,7 @@ chmod a+x .git/hooks/pre-push
 
 The end-to-end tests require the server to run, but the Makefile commands for running the tests (`cypress` and `end2end`) do not launch it. So you have to start the server yourself. The server must be listening on port 8001.
 
-Due to their need to connect to a (somewhat) real database, no end-to-end tests are run by tox if executed as part of a GitHub Actions workflow. They are, however, run if you execute tox on your own machine.
+In case you need to skip the end-to-end tests when running tox, you can set the environment variable SKIP_E2E to any non-empty value. This is done for the Github Action workflows.
 
 ## Documentation
 

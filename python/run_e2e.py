@@ -5,7 +5,7 @@ from subprocess import call
 # https://stackoverflow.com/questions/32757765/conditional-commands-in-tox-tox-travis-ci-and-coveralls
 
 if __name__ == "__main__":
-    if "GITHUB_ACTIONS" not in os.environ:
+    if not os.environ.get("SKIP_E2E"):
         return_code = call(["npx", "cypress", "run"], cwd="../e2e")
         raise SystemExit(return_code)
     else:

@@ -15,12 +15,13 @@ jobs:
       - uses: actions/cache@v1
         with:
           path: ~/.cache/pypoetry/virtualenvs
-          key: ${{runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+          key: ${{runner.os }}-poetry-${{ hashFiles('python/poetry.lock') }}
           restore-keys: |
             ${{ runner.os }}-poetry-
       - name: Install packages
         working-directory: ./python
+        env:
+          SKIP_E2E: "true"
         run: |
-          echo "$GITHUB_ACTIONS"
           poetry install
           poetry run tox
