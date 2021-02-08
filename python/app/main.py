@@ -8,6 +8,6 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
 
-@app.get("/")
+@app.get("/", include_in_schema=False)
 def home(request: Request) -> Response:
     return templates.TemplateResponse("home.html", {"request": request})
