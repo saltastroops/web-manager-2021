@@ -21,7 +21,6 @@ jobs:
       - name: Install packages
         working-directory: ./python
         run: |
+          echo "$GITHUB_ACTIONS"
           poetry install
           poetry run tox
-
-
