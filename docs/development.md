@@ -102,13 +102,13 @@ chmod a+x .git/hooks/pre-push
 ```
 
 !!! note
-    In particular the pre-commit hook is *not* effective, as it formats *all* files, not just the committed ones. This may mean that after the commit you have new changes to commit...
+    In particular the pre-commit hook is *not* effective, as it formats *all* files, not just the committed ones. Also, it does not commit any reformatted code; so after the commit you may have new changes to commit...
 
 ## End-to-end tests
 
-The end-to-end tests require the server, but the Makefile commands for running the tests (`cypress` and `end2end`) do not launch. So you have to start the server yourself. The server must be listening on port 8001.
+The end-to-end tests require the server to run, but the Makefile commands for running the tests (`cypress` and `end2end`) do not launch it. So you have to start the server yourself. The server must be listening on port 8001.
 
-Due to their need to connect to a (somewhat) real database, no end-to-end tests are run by tox if run as part of a GitHub Actions workflow. They are, however, executed if you run tox on your own machine.
+Due to their need to connect to a (somewhat) real database, no end-to-end tests are run by tox if executed as part of a GitHub Actions workflow. They are, however, run if you execute tox on your own machine.
 
 ## Documentation
 
