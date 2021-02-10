@@ -21,7 +21,10 @@ Clone the repository.
 git clone git@github.com:saltastroops/web-manager-2021.git web-manager
 ```
 
-Go to the Python directory and install the required packages.
+!!! tip
+    You may call the created directory whatever you want. However, the following instructions assume it is called `web-manager`.
+
+Go to the directory  `web-manager/python` and install the required packages.
 
 ```shell
 cd web-manager/python
@@ -33,7 +36,7 @@ poetry install
 You can now run the server.
 
 ```shell
-# in web-manager/python
+# In web-manager/python
 
 uvicorn --reload --port 8001 app.main:app
 ```
@@ -44,7 +47,7 @@ uvicorn --reload --port 8001 app.main:app
 However, you can also use the provided Makefile to launch it.
 
 ```shell
-# in web-manager
+# In web-manager
 
 make start
 ```
@@ -79,7 +82,7 @@ make isort
 and make it executable,
 
 ```shell
-# in web-manager
+# In web-manager
 
 chmod a+x .git/hooks/pre-commit
 ```
@@ -96,7 +99,7 @@ make test
 Remember to make this file executable.
 
 ```shell
-# in web-manager
+# In web-manager
 
 chmod a+x .git/hooks/pre-push
 ```
@@ -115,7 +118,7 @@ In case you need to skip the end-to-end tests when running tox, you can set the 
 The documentation is created with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/). You can start a development server for viewing the documentation either by executing
 
 ```shell
-# in web-manager
+# In web-manager
 
 mkdocs serve
 ```
@@ -123,7 +126,7 @@ mkdocs serve
 or by using the Makefile.
 
 ```shell
-# in web-manager
+# In web-manager
 
 make mkdocs
 ```
