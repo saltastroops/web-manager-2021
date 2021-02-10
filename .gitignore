@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Node
+node_modules/
+
+# IntelliJ
+.idea
+*.iml
+/e2e/cypress/integration
+/e2e/cypress/videos
