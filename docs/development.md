@@ -31,6 +31,22 @@ cd web-manager/python
 poetry install
 ```
 
+!!! note
+    In theory this is all you have to do. In practice you might have to jump through various hoops and loops to get the `cryptography` package installed. The [installation instructions](https://cryptography.io/en/latest/installation.html) may be of help, but you might still have to consult Google.
+
+!!! note
+    If you are using an IDE such as IntelliJ, you might have to mark the `python` folder as a sources root folder, as otherwise the IDE might complain about incorrect import statements.
+
+## Settings
+
+All settings for the Web Manager must be provided as environment variables, or in an `.env` file at the project's root level. _Remember that the `.env` file must **never** be put under version control._
+
+You can find the list of settings in the module `app.settings`; each property of the `Settings` class corresponds to an environment variable. The names aren't case-sensitive; so, for example, the property `secret_key` can be defined in an environment variable `SECRET_KEY`. Talking of secret keys, any secret key should be generated with `openssh`.
+
+```shell
+openssl rand -hex 32
+```
+
 ## Running the server
 
 You can now run the server.
