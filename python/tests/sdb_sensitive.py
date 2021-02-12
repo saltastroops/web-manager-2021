@@ -5,7 +5,7 @@ from names import get_last_name, get_first_name
 from typing import List
 from pymysql import connect
 
-from python.tests.util import random_phone_num_generator
+from tests.util import random_phone_num_generator
 
 
 def get_all_investigator_ids(main_db_connection: connect) -> List[int]:
