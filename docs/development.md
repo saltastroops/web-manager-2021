@@ -21,7 +21,10 @@ Clone the repository.
 git clone git@github.com:saltastroops/web-manager-2021.git web-manager
 ```
 
-Go to the Python directory and install the required packages.
+!!! tip
+    You may call the created directory whatever you want. However, the following instructions assume it is called `web-manager`.
+
+Go to the directory  `web-manager/python` and install the required packages.
 
 ```shell
 cd web-manager/python
@@ -33,7 +36,7 @@ poetry install
 You can now run the server.
 
 ```shell
-# in web-manager/python
+# In web-manager/python
 
 uvicorn --reload --port 8001 app.main:app
 ```
@@ -44,7 +47,7 @@ uvicorn --reload --port 8001 app.main:app
 However, you can also use the provided Makefile to launch it.
 
 ```shell
-# in web-manager
+# In web-manager
 
 make start
 ```
@@ -60,15 +63,62 @@ The Makefile provides various rules for formatting and testing.
 * Checking for security issues: `make bandit`
 * Running pytest: `make pytest`
 * Showing code coverage: `make coverage`
+* Running end-to-end tests: `make e2e`
+* Launching the Cypress test runner: `make cypress`
 * Running formatting and other tests: `make test`
 * Running tox: `make tox`
+
+## Making use of the git pre-commit hook
+
+As forgetting to format code or run tests is human, but having to deal with failing GitHub actions is not fun, it is advisable to use git hooks to ensure whatever should be in place is in place before pushing your changes.
+
+For example, you can create a file `.git/hooks/pre-commit` with the content
+
+```shell
+make black
+make isort
+```
+
+and make it executable,
+
+```shell
+# In web-manager
+
+chmod a+x .git/hooks/pre-commit
+```
+
+!!! warning
+    If you forget to make the file executable, the hook will just not be executed, without any error raised.
+
+Similarly you can add pre-push hook by creating a file `.git/hooks/pre-push` with the content
+
+```shell
+make test
+```
+
+Remember to make this file executable.
+
+```shell
+# In web-manager
+
+chmod a+x .git/hooks/pre-push
+```
+
+!!! note
+    In particular the pre-commit hook is *not* effective, as it formats *all* files, not just the committed ones. Also, it does not commit any reformatted code; so after the commit you may have new changes to commit...
+
+## End-to-end tests
+
+The end-to-end tests require the server to run, but the Makefile commands for running the tests (`cypress` and `end2end`) do not launch it. So you have to start the server yourself. The server must be listening on port 8001.
+
+In case you need to skip the end-to-end tests when running tox, you can set the environment variable SKIP_E2E to any non-empty value. This is done for the Github Action workflows.
 
 ## Documentation
 
 The documentation is created with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/). You can start a development server for viewing the documentation either by executing
 
 ```shell
-# in web-manager
+# In web-manager
 
 mkdocs serve
 ```
@@ -76,7 +126,7 @@ mkdocs serve
 or by using the Makefile.
 
 ```shell
-# in web-manager
+# In web-manager
 
 make mkdocs
 ```

@@ -20,6 +20,7 @@ mypy = "^0.800"
 pytest-cov = "^2.11.1"
 bandit = "^1.7.0"
 mkdocs-material = "^6.2.7"
+requests = "^2.25.1"
 names = "^0.3.0"
 
 [build-system]
