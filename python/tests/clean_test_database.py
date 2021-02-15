@@ -2,6 +2,21 @@ from pymysql import connect
 
 
 def clean_test_database(test_db_connection: connect, database_name: str) -> None:
+    """
+    The function drop and create the database which is provided.
+    it will only drop the database if the name starts with test
+
+    Parameters
+    ----------
+    test_db_connection
+        The test database connection
+    database_name
+        The database name in question the name should starts with the word test.
+
+    Returns
+    -------
+        None
+    """
 
     if not database_name.startswith("test"):
         raise ValueError("The test database name should start with test.")
@@ -27,4 +42,3 @@ def clean_test_database(test_db_connection: connect, database_name: str) -> None
 
     finally:
         test_db_connection.commit()
-        print("Created a database")
