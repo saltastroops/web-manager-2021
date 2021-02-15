@@ -31,6 +31,9 @@ help:
 bandit:
 	cd python; bandit -r app
 
+black: ## format code with black
+	cd python; black app tests
+
 clean: ## remove test and coverage artifacts
 	rm -fr .tox/
 	rm -f .coverage
@@ -38,11 +41,14 @@ clean: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 coverage: ## check code coverage quickly with the default Python
-	cd python; pytest --cov-report html
-	$(BROWSER) htmlcov/index.html
+	cd python; pytest --cov-report html:../htmlcov --cov=app tests/
+	$(BROWSER) .coverage/index.html
 
-black: ## format code with black
-	cd python; black app tests
+cypress: ## launch the Cypress test runner
+	cd e2e; npx cypress open
+
+end2end: ## run end-to-end tests
+	cd e2e; npx cypress run
 
 flake8: ## check style with flake8
 	cd python; flake8 app tests
@@ -62,13 +68,13 @@ pytest: ## run tests quickly with the default Python
 start: ## start the development server
 	cd python; uvicorn --reload --port 8001 app.main:app
 
-test: ## run various tests
-	cd python; mypy --config-file mypy.ini .
-	cd python; bandit -r app
-	cd python; flake8
-	cd python; isort --check .
-	cd python; black --check .
-	cd python; pytest
+test: ## run various tests (but no end-to-end tests)
+	cd python; poetry run mypy --config-file mypy.ini .
+	cd python; poetry run bandit -r app
+	cd python; poetry run flake8
+	cd python; poetry run isort --check .
+	cd python; poetry run black --check .
+	cd python; poetry run pytest
 
 tox: ## run tests on every Python version with tox
 	cd python; tox

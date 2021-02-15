@@ -1,10 +1,7 @@
-from typing import Dict
-
 from fastapi import FastAPI
+
+from app.routers.api import router as api_router
 
 app = FastAPI()
 
-
-@app.get("/")
-def home() -> Dict[str, str]:
-    return {"hello": "world"}
+app.include_router(api_router)
