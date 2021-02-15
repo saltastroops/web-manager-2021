@@ -2,7 +2,7 @@
 
 ## Authentication
 
-The Web Manager and the API use OAuth 2, as described in the FastAPI documentation. However, there is a twist: The user can authenticate not only with an Authorization header, but also with an Authorization cookie. In both cases the header or cookie value must be of the bearer format,
+The Web Manager and the API use OAuth 2, as described in the FastAPI documentation. However, in addition to the OAuth 2 authentication with an Authorization header, the user can also authenticate with an Authorization cookie. In both cases the header or cookie value must be of the bearer format,
 
 ```shell
 Bearer some_token_value
