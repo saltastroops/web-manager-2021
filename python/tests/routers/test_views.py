@@ -1,4 +1,5 @@
 import base64
+import re
 from typing import Optional
 from urllib.parse import unquote
 
@@ -8,7 +9,6 @@ from requests import Session
 from starlette import status
 
 from app.models.pydantic import User
-from app.settings import Settings
 from app.util import auth
 
 
@@ -20,7 +20,6 @@ def test_get_login_form_without_redirect(client: Session) -> None:
     assert "login" in response.text.lower()
     assert "username or password" not in response.text.lower()  # no error message
 
-    print(response.text)
     assert 'action="/login?redirect=Lw==' in response.text
 
 
@@ -37,10 +36,11 @@ def test_get_login_form_with_redirect(client: Session) -> None:
 
 
 @pytest.mark.parametrize(
-    "username,password", [("", ""), ("", "whatever"), ("vuyo", ""), ("mary", "incorrect")]
+    "username,password",
+    [("", ""), ("", "whatever"), ("vuyo", ""), ("mary", "incorrect")],
 )
 def test_login_incorrect_credentials_are_rejected(
-        username: str, password: str, client: Session, monkeypatch: MonkeyPatch
+    username: str, password: str, client: Session, monkeypatch: MonkeyPatch
 ) -> None:
     """The login page rejects incorrect user credentials."""
 
@@ -74,12 +74,14 @@ def test_login_home_after_logging_in(client: Session, monkeypatch: MonkeyPatch) 
 
     response = client.post("/login", data={"username": "khaya", "password": "secret"})
 
-    assert response.status_code == status.HTTP_307_TEMPORARY_REDIRECT
+    assert response.status_code == status.HTTP_303_SEE_OTHER
     assert "Location" in response.headers
     assert response.headers["Location"] == "/"
 
 
-def test_login_redirect_after_logging_in(client: Session, monkeypatch: MonkeyPatch) -> None:
+def test_login_redirect_after_logging_in(
+    client: Session, monkeypatch: MonkeyPatch
+) -> None:
     """The login page redirects after logging in."""
 
     def mock_authenticate_user(username: str, password: str) -> Optional[User]:
@@ -91,15 +93,19 @@ def test_login_redirect_after_logging_in(client: Session, monkeypatch: MonkeyPat
 
     monkeypatch.setattr(auth, "authenticate_user", mock_authenticate_user)
 
-    response = client.post(f"/login?redirect={redirect}", data={"username": "khaya", "password": "secret"})
+    response = client.post(
+        f"/login?redirect={redirect}", data={"username": "khaya", "password": "secret"}
+    )
 
-    assert response.status_code == status.HTTP_307_TEMPORARY_REDIRECT
+    assert response.status_code == status.HTTP_303_SEE_OTHER
     assert "Location" in response.headers
     assert response.headers["Location"] == "/proposals"
 
 
-def test_login_sets_authorization_cookie(client: Session, monkeypatch: MonkeyPatch) -> None:
-    """An Authorization is set when logging in is successful."""
+def test_login_sets_authorization_cookie(
+    client: Session, monkeypatch: MonkeyPatch
+) -> None:
+    """An Authorization cookie is set when logging in is successful."""
 
     def mock_authenticate_user(username: str, password: str) -> Optional[User]:
         if password != "secret":
@@ -115,11 +121,41 @@ def test_login_sets_authorization_cookie(client: Session, monkeypatch: MonkeyPat
     assert cookie_value.startswith("Bearer ")
 
 
-def test_redirect_to_login_for_missing_auth(client: Session):
+def test_redirect_to_login_for_missing_auth(client: Session) -> None:
+    """Secured pages redirect unauthenticated users to the login page."""
     response = client.get("/proposals")
-    print(response.text)
-    redirect = base64.b64encode(b"/proposals").decode("utf-8")
 
-    assert response.status_code == status.HTTP_307_TEMPORARY_REDIRECT
-    assert "Location" in response.headers
-    assert response.headers["Location"] == f"/login?redirect={redirect}"
+    # the test client follows the redirect to the login page
+    assert response.status_code == 200
+    assert "login" in response.text.lower()
+    match = re.search(r'redirect=([^"]*)"', response.text)
+    assert match
+    redirect = base64.b64decode(match.group(1)).decode("utf-8")
+    assert "/proposals" in redirect
+
+
+def test_redirect_after_successful_login(
+    client: Session, monkeypatch: MonkeyPatch
+) -> None:
+    """The user is redirected to the originally requested page if they had to login."""
+
+    def mock_authenticate_user(username: str, password: str) -> Optional[User]:
+        if password != "secret":
+            return None
+        return User(username=username)
+
+    monkeypatch.setattr(auth, "authenticate_user", mock_authenticate_user)
+    # try to access a secured page
+    response = client.get("/proposals")
+
+    # extract the URL to which the login credentials should be submitted
+    match = re.search(r'action\s*=\s*"([^"]*)"', response.text)
+    assert match
+    url = match.group(1)
+    response = client.post(url, data={"username": "siya", "password": "secret"})
+
+    # go to that URL (which should be for the secured page)
+    redirect_url = response.headers.get("Location")
+    assert redirect_url
+    response = client.get(redirect_url)
+    assert "proposals" in response.text.lower()

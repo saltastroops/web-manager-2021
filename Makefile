@@ -42,7 +42,7 @@ clean: ## remove test and coverage artifacts
 
 coverage: ## check code coverage quickly with the default Python
 	cd python; pytest --cov-report html:../htmlcov --cov=app tests/
-	$(BROWSER) .coverage/index.html
+	$(BROWSER) htmlcov/index.html
 
 cypress: ## launch the Cypress test runner
 	cd e2e; npx cypress open

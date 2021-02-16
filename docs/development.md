@@ -41,7 +41,7 @@ poetry install
 
 All settings for the Web Manager must be provided as environment variables, or in an `.env` file at the project's root level. _Remember that the `.env` file must **never** be put under version control._
 
-You can find the list of settings in the module `app.settings`; each property of the `Settings` class corresponds to an environment variable. The names aren't case-sensitive; so, for example, the property `secret_key` can be defined in an environment variable `SECRET_KEY`. Talking of secret keys, any secret key should be generated with `openssh`.
+You can find the list of settings in the module `app.settings`; each property of the `Settings` class corresponds to an environment variable. The names aren't case-sensitive; so, for example, the property `secret_key` can be defined in an environment variable `SECRET_KEY`. Talking of secret keys, any secret key should be generated with `openssl`.
 
 ```shell
 openssl rand -hex 32

@@ -13,7 +13,7 @@ def mock_get_settings() -> Settings:
     return Settings(secret_key="top-secret")
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
 def client() -> Generator[Session, None, None]:
     app.dependency_overrides[get_settings] = mock_get_settings
 

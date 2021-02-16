@@ -115,13 +115,15 @@ def create_access_token(secret_key: str, user: User) -> AccessToken:
     token = create_jwt_token(
         secret_key=secret_key,
         payload={"sub": user.username},
-        expires_delta=token_expires
+        expires_delta=token_expires,
     )
 
     return AccessToken(access_token=token, token_type="bearer")  # nosec
 
 
-def get_current_user(settings: Settings = Depends(get_settings), token: str = Depends(oauth2_scheme)) -> User:
+def get_current_user(
+    settings: Settings = Depends(get_settings), token: str = Depends(oauth2_scheme)
+) -> User:
     """Get the currently logged in user."""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
