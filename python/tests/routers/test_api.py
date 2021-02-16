@@ -58,5 +58,5 @@ def test_token_returns_authentication_token(
     token = resp.json()["access_token"]
 
     # ... and check that it is valid
-    user = auth.get_current_user(settings.secret_key, token)
+    user = auth.get_current_user(settings, token)
     assert user.username == "jane"

@@ -12,6 +12,7 @@ from starlette.requests import Request
 
 from app.models.pydantic import UserInDB
 from app.service import user as user_service
+from app.settings import Settings
 from app.util import auth
 from app.util.auth import OAuth2TokenOrCookiePasswordBearer
 
@@ -218,7 +219,7 @@ def test_get_current_user_fails_for_invalid_token(
     token = jwt.encode(token_payload, secret_key, algorithm="HS256")
 
     with pytest.raises(HTTPException) as excinfo:
-        auth.get_current_user(secret_key, token)
+        auth.get_current_user(Settings(secret_key=secret_key), token)
     assert excinfo.value.status_code == 401
 
 
@@ -226,7 +227,7 @@ def test_get_current_user_fails_for_corrupted_token() -> None:
     secret_key = "very-secret"
     token = "corrupted-token"
     with pytest.raises(HTTPException) as excinfo:
-        auth.get_current_user(secret_key, token)
+        auth.get_current_user(Settings(secret_key=secret_key), token)
     assert excinfo.value.status_code == 401
 
 
@@ -242,6 +243,6 @@ def test_get_current_user_returns_user(monkeypatch: MonkeyPatch) -> None:
     secret_key = "very-secret"
     token = jwt.encode({"sub": "johndoe"}, secret_key, algorithm="HS256")
 
-    user = auth.get_current_user(secret_key, token)
+    user = auth.get_current_user(Settings(secret_key=secret_key), token)
     assert user.username == "johndoe"
     assert not hasattr(user, "hashed_password")

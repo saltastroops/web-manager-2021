@@ -9,8 +9,6 @@ from app.models.pydantic import AccessToken
 from app.settings import Settings
 from app.util import auth
 
-ACCESS_TOKEN_LIFETIME_HOURS = 24
-
 
 router = APIRouter()
 
@@ -47,11 +45,4 @@ def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    token_expires = timedelta(hours=ACCESS_TOKEN_LIFETIME_HOURS)
-    token = auth.create_jwt_token(
-        secret_key=settings.secret_key,
-        payload={"sub": user.username},
-        expires_delta=token_expires,
-    )
-
-    return AccessToken(access_token=token, token_type="bearer")  # nosec
+    return auth.create_access_token(settings.secret_key, user)

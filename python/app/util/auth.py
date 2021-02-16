@@ -6,8 +6,9 @@ https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/.
 """
 from datetime import datetime, timedelta
 from typing import Any, Dict, Optional, cast
+from urllib.parse import unquote
 
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.security.utils import get_authorization_scheme_param
 from jose import JWTError, jwt
@@ -16,10 +17,14 @@ from starlette import status
 from starlette.requests import Request
 from starlette.status import HTTP_401_UNAUTHORIZED
 
-from app.models.pydantic import User
+from app.dependencies import get_settings
+from app.models.pydantic import User, AccessToken
 from app.service import user as user_service
+from app.settings import Settings
 
 ALGORITHM = "HS256"
+
+ACCESS_TOKEN_LIFETIME_HOURS = 24
 
 
 class OAuth2TokenOrCookiePasswordBearer(OAuth2PasswordBearer):
@@ -28,7 +33,9 @@ class OAuth2TokenOrCookiePasswordBearer(OAuth2PasswordBearer):
 
     In addition to being able to supply an authentication token via a bearer token in an
     Authorization HTTP header, the extension allows you to supply the bearer token in a
-    cookie named Authorization.
+    cookie named Authorization. This cookie must have been quoted using the %xx escape
+    (i.e. the white space between "Bearer" and the actual token value must have been
+    replaced with "%20").
 
     While the extension allows authentication via a cookie, from the point of view of
     the OpenAPI integration by FastAPI, it is completely the same as FastAPI's
@@ -39,7 +46,11 @@ class OAuth2TokenOrCookiePasswordBearer(OAuth2PasswordBearer):
     async def __call__(self, request: Request) -> Optional[str]:
         authorization = request.headers.get("Authorization")
         if not authorization:
-            authorization = request.cookies.get("Authorization")
+            quoted_token_value = request.cookies.get("Authorization")
+            if quoted_token_value:
+                authorization = unquote(quoted_token_value)
+            else:
+                authorization = None
         scheme, param = get_authorization_scheme_param(authorization)
         if not authorization or scheme.lower() != "bearer":
             if self.auto_error:
@@ -52,6 +63,8 @@ class OAuth2TokenOrCookiePasswordBearer(OAuth2PasswordBearer):
                 return None
         return param
 
+
+oauth2_scheme = OAuth2TokenOrCookiePasswordBearer("api/token")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -96,14 +109,27 @@ def create_jwt_token(
     return cast(str, encoded_jwt)
 
 
-def get_current_user(secret_key: str, token: str) -> User:
+def create_access_token(secret_key: str, user: User) -> AccessToken:
+    """Generate an authentication token."""
+    token_expires = timedelta(hours=ACCESS_TOKEN_LIFETIME_HOURS)
+    token = create_jwt_token(
+        secret_key=secret_key,
+        payload={"sub": user.username},
+        expires_delta=token_expires
+    )
+
+    return AccessToken(access_token=token, token_type="bearer")  # nosec
+
+
+def get_current_user(settings: Settings = Depends(get_settings), token: str = Depends(oauth2_scheme)) -> User:
+    """Get the currently logged in user."""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials.",
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, secret_key, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, settings.secret_key, algorithms=[ALGORITHM])
         username = payload.get("sub")
         if username is None:
             raise credentials_exception
