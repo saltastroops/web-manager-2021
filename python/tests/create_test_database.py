@@ -2,15 +2,7 @@ import os
 import click
 from pymysql import connect, cursors
 
-from tests.clean_test_database import clean_test_database
-from tests.sdb_sensitive import (
-    get_all_investigator_ids,
-    get_all_pipt_user_ids,
-    get_all_target_coordinates_id,
-    update_investigators_query,
-    update_pipt_users_query,
-    update_target_coordinates_query
-)
+from tests.clean_test_database import clean_test_database, update_test_database
 
 
 @click.command()
@@ -49,11 +41,11 @@ def cli(
     host_connection = connect(host=TEST_DB_HOST, user=TEST_DB_USER, password=TEST_DB_PASSWORD,
                               charset="utf8mb4", cursorclass=cursors.DictCursor)
 
-# ________________________________________Start Create a dump SDB_______________________________________________________
     script_dir = os.path.dirname(os.path.realpath(__file__))
 
     dump_file = script_dir + "/sdb_copy.sql"
 
+    # Dumping the main database
     os.system(
         f"mysqldump -u {MAIN_DB_USER} --password {MAIN_DB_PASSWORD} -h {MAIN_DB_HOST} "
         f"--default-character-set=utf8 --routines --ignore-table=bumping_sdb.log {MAIN_DB_NAME} "
@@ -68,31 +60,12 @@ def cli(
         f"mysql -u {TEST_DB_USER} --password='{TEST_DB_PASSWORD}' -h {TEST_DB_HOST} "
         f"--default-character-set=utf8 {TEST_DB_NAME} < {dump_file}"
     )
+    # Remove the test database
     os.system(f"rm {dump_file}")
-# ________________________________________End Create a dump SDB_________________________________________________________
 
-# ________________________________________Start test Database update____________________________________________________
     # Connect to the newly created test database
     test_db_connection = connect(host=TEST_DB_HOST, user=TEST_DB_USER, passwd=TEST_DB_PASSWORD, db=TEST_DB_NAME,
                                  port=3306)
 
-    # Collecting the ids to update
-    investigators = get_all_investigator_ids(test_db_connection)
-    pipt_users = get_all_pipt_user_ids(test_db_connection)
-    target_coordinates = get_all_target_coordinates_id(test_db_connection)
-
-    # !!! INITIATE A TRANSACTION !!!
-    try:
-        test_db_connection.begin()
-        with test_db_connection.cursor() as cur:
-            cur.execute(update_investigators_query(investigators))
-            cur.execute(update_pipt_users_query(pipt_users))
-            cur.execute(update_target_coordinates_query(target_coordinates))
-
-    except Exception as e:
-        print("Exception occurred:{}".format(e))
-    finally:
-        test_db_connection.commit()
-        test_db_connection.close()
-
-# ________________________________________End test Database update______________________________________________________
+    # Update the test database
+    update_test_database(test_db_connection)
