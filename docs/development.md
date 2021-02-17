@@ -79,8 +79,9 @@ The Makefile provides various rules for formatting and testing.
 - Checking for security issues: `make bandit`
 - Running pytest: `make pytest`
 - Showing code coverage: `make coverage`
-- Running end-to-end tests: `make e2e`
+- Running end-to-end tests: `make end2end`
 - Formatting the JavaScript code: `make prettier`
+- Formatting staged JavaScript files: `make prettier-staged`
 - Launching the Cypress test runner: `make cypress`
 - Running formatting and other tests: `make test`
 - Running tox: `make tox`
@@ -94,7 +95,7 @@ For example, you can create a file `.git/hooks/pre-commit` with the content
 ```shell
 make black
 make isort
-make prettier
+make prettier-staged
 ```
 
 and make it executable,

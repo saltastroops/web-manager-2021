@@ -24,4 +24,15 @@ describe("Login Form", () => {
 
     cy.contains("Home");
   });
+
+  it("should redirect from a secured page to the login page and then back", () => {
+    cy.visit("/proposals");
+
+    cy.contains("Proposals").should("not.exist");
+    cy.get("#username").type("john");
+    cy.get("#password").type("!john");
+    cy.get("form").last().submit();
+
+    cy.contains("Proposals").should("exist");
+  });
 });
