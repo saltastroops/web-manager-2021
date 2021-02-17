@@ -1,5 +1,5 @@
-from typing import Optional
 import base64
+from typing import Optional
 from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, Form
@@ -17,6 +17,11 @@ from app.util.auth import get_current_user
 router = APIRouter()
 
 templates = Jinja2Templates(directory="templates")
+
+
+@router.get("/", response_class=HTMLResponse)
+def home() -> Response:
+    return HTMLResponse("<h1>Home</h1>")
 
 
 @router.get("/login", response_class=HTMLResponse)

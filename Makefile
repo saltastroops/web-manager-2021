@@ -62,6 +62,12 @@ mkdocs: ## start development documentation server
 mypy: ## check types with mypy
 	cd python; mypy --config-file mypy.ini .
 
+prettier: ## format JavaScript code
+	cd e2e; npx prettier --write cypress
+
+prettier-staged: ## format staged JavaScript files
+	cd e2e; npm run pretty-quick:staged
+
 pytest: ## run tests quickly with the default Python
 	cd python; pytest
 
@@ -75,6 +81,8 @@ test: ## run various tests (but no end-to-end tests)
 	cd python; poetry run isort --check .
 	cd python; poetry run black --check .
 	cd python; poetry run pytest
+	cd e2e; npx prettier --check cypress
+	cd e2e; npm run cypress:run
 
 tox: ## run tests on every Python version with tox
 	cd python; tox

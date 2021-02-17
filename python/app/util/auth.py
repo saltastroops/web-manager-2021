@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, Optional, cast
 from urllib.parse import unquote
 
-from fastapi import HTTPException, Depends
+from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.security.utils import get_authorization_scheme_param
 from jose import JWTError, jwt
@@ -18,7 +18,7 @@ from starlette.requests import Request
 from starlette.status import HTTP_401_UNAUTHORIZED
 
 from app.dependencies import get_settings
-from app.models.pydantic import User, AccessToken
+from app.models.pydantic import AccessToken, User
 from app.service import user as user_service
 from app.settings import Settings
 

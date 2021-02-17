@@ -6,12 +6,12 @@ This page outlines how to develop the Web Manager.
 
 The following must be installed on your machine.
 
-* [Python](https://www.python.org) 3.9.0 or higher
-* [Poetry](https://python-poetry.org) 1.1.0 or higher
-  
+- [Python](https://www.python.org) 3.9.0 or higher
+- [Poetry](https://python-poetry.org) 1.1.0 or higher
+
 In case you are using the Docker image, you probably need a Linux or macOS machine, and you certainly need Docker:
 
-* [Docker](https://www.docker.com) 20.10.0 or higher
+- [Docker](https://www.docker.com) 20.10.0 or higher
 
 ## Installation
 
@@ -22,9 +22,9 @@ git clone git@github.com:saltastroops/web-manager-2021.git web-manager
 ```
 
 !!! tip
-    You may call the created directory whatever you want. However, the following instructions assume it is called `web-manager`.
+You may call the created directory whatever you want. However, the following instructions assume it is called `web-manager`.
 
-Go to the directory  `web-manager/python` and install the required packages.
+Go to the directory `web-manager/python` and install the required packages.
 
 ```shell
 cd web-manager/python
@@ -32,10 +32,10 @@ poetry install
 ```
 
 !!! note
-    In theory this is all you have to do. In practice you might have to jump through various hoops and loops to get the `cryptography` package installed. The [installation instructions](https://cryptography.io/en/latest/installation.html) may be of help, but you might still have to consult Google.
+In theory this is all you have to do. In practice you might have to jump through various hoops and loops to get the `cryptography` package installed. The [installation instructions](https://cryptography.io/en/latest/installation.html) may be of help, but you might still have to consult Google.
 
 !!! note
-    If you are using an IDE such as IntelliJ, you might have to mark the `python` folder as a sources root folder, as otherwise the IDE might complain about incorrect import statements.
+If you are using an IDE such as IntelliJ, you might have to mark the `python` folder as a sources root folder, as otherwise the IDE might complain about incorrect import statements.
 
 ## Settings
 
@@ -58,7 +58,7 @@ uvicorn --reload --port 8001 app.main:app
 ```
 
 !!!tip
-    Note the non-default port. This has been chosen as the development documentation server (MkDocs) is listening on port 8000.
+Note the non-default port. This has been chosen as the development documentation server (MkDocs) is listening on port 8000.
 
 However, you can also use the provided Makefile to launch it.
 
@@ -72,17 +72,18 @@ make start
 
 The Makefile provides various rules for formatting and testing.
 
-* Formatting the code: `make black`
-* Sorting the import statements: `make isort`
-* Checking styling: `make flake8`
-* Checking types: `make mypy`
-* Checking for security issues: `make bandit`
-* Running pytest: `make pytest`
-* Showing code coverage: `make coverage`
-* Running end-to-end tests: `make e2e`
-* Launching the Cypress test runner: `make cypress`
-* Running formatting and other tests: `make test`
-* Running tox: `make tox`
+- Formatting the Python code: `make black`
+- Sorting the Python import statements: `make isort`
+- Checking styling: `make flake8`
+- Checking types: `make mypy`
+- Checking for security issues: `make bandit`
+- Running pytest: `make pytest`
+- Showing code coverage: `make coverage`
+- Running end-to-end tests: `make e2e`
+- Formatting the JavaScript code: `make prettier`
+- Launching the Cypress test runner: `make cypress`
+- Running formatting and other tests: `make test`
+- Running tox: `make tox`
 
 ## Making use of the git pre-commit hook
 
@@ -93,6 +94,7 @@ For example, you can create a file `.git/hooks/pre-commit` with the content
 ```shell
 make black
 make isort
+make prettier
 ```
 
 and make it executable,
@@ -104,9 +106,9 @@ chmod a+x .git/hooks/pre-commit
 ```
 
 !!! warning
-    If you forget to make the file executable, the hook will just not be executed, without any error raised.
+If you forget to make the file executable, the hook will just not be executed, without any error raised.
 
-Similarly you can add pre-push hook by creating a file `.git/hooks/pre-push` with the content
+Similarly you can add a pre-push hook by creating a file `.git/hooks/pre-push` with the content
 
 ```shell
 make test
@@ -121,7 +123,7 @@ chmod a+x .git/hooks/pre-push
 ```
 
 !!! note
-    In particular the pre-commit hook is *not* effective, as it formats *all* files, not just the committed ones. Also, it does not commit any reformatted code; so after the commit you may have new changes to commit...
+In particular the pre-commit hook is _not_ effective, as it formats _all_ files, not just the committed ones. Also, it does not commit any reformatted code; so after the commit you may have new changes to commit...
 
 ## End-to-end tests
 

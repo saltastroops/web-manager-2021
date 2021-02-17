@@ -7,7 +7,6 @@ from app.models.pydantic import AccessToken
 from app.settings import Settings
 from app.util import auth
 
-
 router = APIRouter()
 
 

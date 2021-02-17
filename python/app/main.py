@@ -4,7 +4,12 @@ from fastapi import FastAPI
 from starlette import status
 from starlette.exceptions import HTTPException
 from starlette.requests import Request
-from starlette.responses import JSONResponse, RedirectResponse, HTMLResponse, Response
+from starlette.responses import (
+    HTMLResponse,
+    JSONResponse,
+    RedirectResponse,
+    Response,
+)
 
 from app.routers.api import router as api_router
 from app.routers.views import router as views_router

@@ -4,11 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "pretty-quick:staged": "pretty-quick --staged"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "cypress": "^6.4.0"
+    "cypress": "^6.4.0",
+    "prettier": "^2.2.1",
+    "pretty-quick": "^3.1.0"
+  },
+  "dependencies": {
+    "remove": "^0.1.5"
   }
 }
