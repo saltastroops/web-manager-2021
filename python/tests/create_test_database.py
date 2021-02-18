@@ -69,3 +69,38 @@ def cli(
 
     # Update the test database
     update_test_database(test_db_connection)
+
+
+def create_empty_test_database(test_db_connection: connect, test_db_name: str) -> None:
+    """
+    Create an empty test database.
+
+    If the database exists already, it is removed first. The name of the test database
+    must start with "test".
+
+    Parameters
+    ----------
+    test_db_connection
+        The test database connection.
+    test_db_name
+        The test database name, which must start with "test".
+
+    Returns
+    -------
+        None
+    """
+
+    if not test_db_name.startswith("test"):
+        raise ValueError("The test database name must start with \"test\".")
+
+    try:
+        with test_db_connection.cursor() as cur:
+            # Delete an existing database
+            drop_query = f"DROP DATABASE IF EXISTS %(db_name)s"
+            cur.execute(drop_query, {"db_name": test_db_name})
+
+            # Create the database
+            create_query = f"CREATE DATABASE %(db_name)s"
+            cur.execute(create_query, {"db_name": test_db_name})
+    finally:
+        test_db_connection.commit()
