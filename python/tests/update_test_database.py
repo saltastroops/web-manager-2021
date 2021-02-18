@@ -2,7 +2,7 @@ import os
 import click
 from pymysql import connect, cursors
 
-from tests.clean_test_database import clean_test_database, update_test_database
+from tests.clean_test_database import update_test_database
 
 
 @click.command()
@@ -52,8 +52,8 @@ def cli(
         "--result-file sdb_copy.sql"
     )
 
-    # clean the test database
-    clean_test_database(host_connection, TEST_DB_NAME)
+    # create the test database
+    create_empty_test_database(host_connection, TEST_DB_NAME)
 
     # import mysql dump file
     os.system(
