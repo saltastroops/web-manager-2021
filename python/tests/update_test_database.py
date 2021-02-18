@@ -2,7 +2,14 @@ import os
 import click
 from pymysql import connect, cursors
 
-from tests.clean_test_database import update_test_database
+from tests.sdb_sensitive import (
+    get_all_investigator_ids,
+    get_all_pipt_user_ids,
+    get_all_target_coordinates_id,
+    update_investigators_query,
+    update_pipt_users_query,
+    update_target_coordinates_query
+)
 
 
 @click.command()
@@ -68,7 +75,7 @@ def cli(
                                  port=3306)
 
     # Update the test database
-    update_test_database(test_db_connection)
+    update_sensitive_info(test_db_connection)
 
 
 def create_empty_test_database(test_db_connection: connect, test_db_name: str) -> None:
@@ -104,3 +111,24 @@ def create_empty_test_database(test_db_connection: connect, test_db_name: str) -
             cur.execute(create_query, {"db_name": test_db_name})
     finally:
         test_db_connection.commit()
+
+
+def update_sensitive_info(test_db_connection: connect) -> None:
+    # Collecting the ids to update
+    investigators = get_all_investigator_ids(test_db_connection)
+    pipt_users = get_all_pipt_user_ids(test_db_connection)
+    target_coordinates = get_all_target_coordinates_id(test_db_connection)
+
+    # !!! INITIATE A TRANSACTION !!!
+    try:
+        test_db_connection.begin()
+        with test_db_connection.cursor() as cur:
+            cur.execute(update_investigators_query(investigators))
+            cur.execute(update_pipt_users_query(pipt_users))
+            cur.execute(update_target_coordinates_query(target_coordinates))
+
+    except Exception as e:
+        print("Exception occurred:{}".format(e))
+    finally:
+        test_db_connection.commit()
+        test_db_connection.close()
