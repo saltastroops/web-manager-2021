@@ -31,6 +31,9 @@ help:
 bandit:
 	cd python; bandit -r app
 
+black: ## format code with black
+	cd python; black app tests
+
 clean: ## remove test and coverage artifacts
 	rm -fr .tox/
 	rm -f .coverage
@@ -38,11 +41,8 @@ clean: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 coverage: ## check code coverage quickly with the default Python
-	cd python; pytest --cov-report html
-	$(BROWSER) htmlcov/index.html
-
-black: ## format code with black
-	cd python; black app tests
+	cd python; pytest --cov-report html:../htmlcov --cov=app tests/
+	$(BROWSER) .coverage/index.html
 
 cypress: ## launch the Cypress test runner
 	cd e2e; npx cypress open
