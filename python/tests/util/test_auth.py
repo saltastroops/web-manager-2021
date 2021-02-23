@@ -180,8 +180,8 @@ def test_create_jwt_token(payload: Dict[str, Any]) -> None:
     token = auth.create_jwt_token(secret_key=secret_key, payload=payload)
     decoded_token = jwt.decode(token, secret_key, algorithms=["HS256"])
 
-    # the token expires in 15 minutes (= 15 * 60 seconds)
-    assert abs(int(decoded_token["exp"]) - 15 * 60 - time()) < 5
+    # the token expires in a week (= 7 * 24 * 60 * 60 seconds)
+    assert abs(int(decoded_token["exp"]) - 7 * 24 * 60 * 60 - time()) < 5
 
     # assert decoded_token == payload would not work, as the decoded token dictionary
     # has an exp key.
