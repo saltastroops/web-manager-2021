@@ -3,6 +3,8 @@ extra:
 
 markdown_extensions:
   - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
 
 nav:
   - Home: index.md

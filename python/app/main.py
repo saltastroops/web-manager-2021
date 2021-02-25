@@ -10,6 +10,7 @@ from starlette.responses import (
     RedirectResponse,
     Response,
 )
+from starlette.staticfiles import StaticFiles
 
 from app.routers.api import router as api_router
 from app.routers.views import router as views_router
@@ -18,6 +19,8 @@ app = FastAPI()
 
 app.include_router(api_router)
 app.include_router(views_router)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 def _is_api_request(request: Request) -> bool:

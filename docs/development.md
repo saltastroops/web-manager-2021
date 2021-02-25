@@ -149,3 +149,46 @@ or by using the Makefile.
 
 make mkdocs
 ```
+
+## Jinja2 templates
+
+The website is using Jinja2 for rendering content.
+
+### Loading static files
+
+In order to avoid caching issues, you should not load static files such as JavaScript files, stylesheets and images, you should not use the raw URLs of such files in a template. Instead, apply the `autoversion` filter. For example:
+
+```html
+<link
+  rel="stylesheet"
+  href="{% raw %}{{ url_for('static', path='/css/main.css') | autoversion }}{% endraw %}"
+/>
+```
+
+The filter adds a query parameter `v` to the URL, whose value is the MD5 hash of the file to which the URL is pointing. This avoids caching issues.
+
+### Adding custom template filters
+
+Adding a Jinja2 template filter is a two-step process. First, you define your filter function in `app/jinja2/filters.py`. For example, here is a filter for cheering everyone up.
+
+```python
+def keepsmiling(text: str) -> str:
+    return f"{text} 😀️"
+```
+
+Second, you register the filter in `app/routers/views.py`.
+
+```python hl_lines="2 6"
+from starlette.templating import Jinja2Templates
+from app.jinja2.filters import keepsmiling
+
+templates = Jinja2Templates(directory="templates")
+
+templates.env.filters['keepsmiling'] = keepsmiling
+```
+
+You can then use your custom filter as you would any regular Jinja2 filter.
+
+```html
+<h1>{% raw %}{{ "Stay positive" | keepsmiling }}{% endraw %}</h1>
+```

@@ -9,6 +9,7 @@ from starlette.responses import HTMLResponse, RedirectResponse, Response
 from starlette.templating import Jinja2Templates
 
 from app.dependencies import get_settings
+from app.jinja2.filters import autoversion
 from app.models.pydantic import User
 from app.settings import Settings
 from app.util import auth
@@ -17,6 +18,8 @@ from app.util.auth import get_current_user
 router = APIRouter()
 
 templates = Jinja2Templates(directory="templates")
+
+templates.env.filters["autoversion"] = autoversion
 
 
 @router.get("/", response_class=HTMLResponse)
