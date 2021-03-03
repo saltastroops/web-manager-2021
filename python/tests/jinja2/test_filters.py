@@ -10,38 +10,38 @@ from app.jinja2.filters import autoversion
     "url,filter_value",
     [
         (
-            "http://example.com/static/css/main.css",
-            "http://example.com/static/css/main.css?v=HASH",
+            "http://example.com/static/css/global.css",
+            "http://example.com/static/css/global.css?v=HASH",
         ),
         (
-            "https://example.com/static/css/main.css",
-            "https://example.com/static/css/main.css?v=HASH",
+            "https://example.com/static/css/global.css",
+            "https://example.com/static/css/global.css?v=HASH",
         ),
         (
-            "https://example.com:80/static/css/main.css",
-            "https://example.com:80/static/css/main.css?v=HASH",
+            "https://example.com:80/static/css/global.css",
+            "https://example.com:80/static/css/global.css?v=HASH",
         ),
         (
-            "https://www.example.com/static/css/main.css#somewhere",
-            "https://www.example.com/static/css/main.css?v=HASH#somewhere",
+            "https://www.example.com/static/css/global.css#somewhere",
+            "https://www.example.com/static/css/global.css?v=HASH#somewhere",
         ),
         (
-            "https://www.example.com/static/css/main.css?limit=43",
-            "https://www.example.com/static/css/main.css?limit=43&v=HASH",
+            "https://www.example.com/static/css/global.css?limit=43",
+            "https://www.example.com/static/css/global.css?limit=43&v=HASH",
         ),
         (
-            "https://www.example.com/static/css/main.css?limit=43#somewhere",
-            "https://www.example.com/static/css/main.css?limit=43&v=HASH#somewhere",
+            "https://www.example.com/static/css/global.css?limit=43#somewhere",
+            "https://www.example.com/static/css/global.css?limit=43&v=HASH#somewhere",
         ),
-        ("/static/css/main.css", "/static/css/main.css?v=HASH"),
+        ("/static/css/global.css", "/static/css/global.css?v=HASH"),
     ],
 )
 def test_autoversion(url: str, filter_value: str) -> None:
     """The autoversion filter is working correctly."""
 
-    # Get the MD5 hash of the (real) file static/css/main.css
+    # Get the MD5 hash of the (real) file static/css/global.css
     h = hashlib.md5()
-    with open(pathlib.Path("static") / "css" / "main.css", "rb") as f:
+    with open(pathlib.Path("static") / "css" / "global.css", "rb") as f:
         content = f.read()
     h.update(content)
     hash_value = h.hexdigest()
@@ -56,7 +56,7 @@ def test_autoversion(url: str, filter_value: str) -> None:
 def test_autoversion_does_not_accept_relative_filepaths() -> None:
     """The autoversion filter does not accept relative file paths."""
     with pytest.raises(ValueError) as excinfo:
-        autoversion("static/css/main.css")
+        autoversion("static/css/global.css")
 
     assert "relative" in str(excinfo)
 

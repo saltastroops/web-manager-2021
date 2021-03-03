@@ -15,6 +15,7 @@ def mock_get_settings() -> Settings:
 
 @pytest.fixture()
 def client() -> Generator[Session, None, None]:
+    """A client which does not authenticate the user."""
     app.dependency_overrides[get_settings] = mock_get_settings
 
     with TestClient(app) as client:

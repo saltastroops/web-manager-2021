@@ -76,3 +76,18 @@ def login_post(
 @router.get("/proposals", response_class=HTMLResponse)
 def proposals(user: User = Depends(get_current_user)) -> Response:
     return HTMLResponse("<h1>Proposals</h1>")
+
+
+@router.get("/proposals/{proposal_code}", response_class=HTMLResponse)
+def proposal(
+    request: Request, proposal_code: str, user: User = Depends(get_current_user)
+) -> Response:
+    return templates.TemplateResponse(
+        "proposal.html",
+        {
+            "request": request,
+            "proposal_code": proposal_code,
+            "initial_block": "<h2>This is the initial block.</h2>",
+            "block_codes": ["abcd9876", "pdgh", "356hcdfth", "kh895gght"],
+        },
+    )

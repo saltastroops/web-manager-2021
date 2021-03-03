@@ -158,7 +158,7 @@ The base page template automatically loads the CSS file `static/global.css`, whi
 {% block extra_css %}
 <link
   rel="stylesheet"
-  href="{{ url_for('static', path='css/login.css') | autoversion }}"
+  href="{% raw %}{{ url_for('static', path='css/login.css') | autoversion }}{% endraw %}"
 />
 {% endblock %}
 ```
@@ -172,6 +172,18 @@ The following rules should be followed when styling.
 - Avoid using composite selectors.
 - Every page should have its own CSS file, which is only loaded on that page. Styles which apply to multiple pages should be defined in a separate file. If they in principle apply to all pages, they should be defined in `static/global.css`.
 - Variables should be used for all color values, and semantic colour variables are strongly preferred. For example, use `--color-success` rather than, say, `--green`.
+
+## Adding JavaScript files
+
+The base page template includes a block `extra_js` in which you can load JavaScript files, as shown in this example.
+
+```html
+{%raw %}{% block extra_js %}
+<script src="{{ url_for('strict', 'js/salt-block-view.js') | autoversion }}"></script>
+{% endblock %}{% endraw %}
+```
+
+Don't forget to use the `autoversion` filter to avoid caching issues.
 
 ## Jinja2 templates
 

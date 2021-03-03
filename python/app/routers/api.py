@@ -1,11 +1,15 @@
+from typing import Dict
+
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 
 from app.dependencies import get_settings
-from app.models.pydantic import AccessToken
+from app.models.pydantic import AccessToken, User
+from app.service import block
 from app.settings import Settings
 from app.util import auth
+from app.util.auth import get_current_user
 
 router = APIRouter()
 
@@ -43,3 +47,11 @@ def login_for_access_token(
         )
 
     return auth.create_access_token(settings.secret_key, user)
+
+
+@router.get("/api/proposals/{proposal_code}/blocks/{block_code}")
+async def get_block_html(
+    proposal_code: str, block_code: str, user: User = Depends(get_current_user)
+) -> Dict[str, str]:
+    block_content = block.get_block_html(proposal_code, block_code)
+    return {"html": block_content}
