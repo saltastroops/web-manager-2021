@@ -1,29 +1,41 @@
-<!DOCTYPE html>
-
-<html lang="en">
-  <head>
-    <title>Web Manager | Login</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', path='/css/main.css') | autoversion }}"
-    />
-  </head>
-  <body>
-    <h1>Login</h1>
-    <form action="/login?redirect={{ redirect }}" method="post">
-      {% if incorrect_credentials %}
-      <div>Username or password wrong.</div>
-      {% endif %}
-      <label for="username">Username</label>
-      <input
-        id="username"
-        type="text"
-        name="username"
-        value="{{ username | e }}"
-      />
-      <label for="password">Password</label>
-      <input id="password" type="password" name="password" />
-      <button type="submit">Login</button>
-    </form>
-  </body>
-</html>
+{% extends "base.html" %} {% block title %}Login{% endblock %} {% block
+extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', path='css/login.css') | autoversion }}"
+/>
+{% endblock %} {% block page_content %}
+<h1>Login</h1>
+<form
+  class="form login-form"
+  action="/login?redirect={{ redirect }}"
+  method="post"
+>
+  {% if incorrect_credentials %}
+  <div class="notification notification--error">
+    Username or password wrong.
+  </div>
+  {% endif %}
+  <label class="label form__label" for="username">Username</label>
+  <input
+    class="input form__input"
+    id="username"
+    type="text"
+    name="username"
+    value="{{ username | e }}"
+  />
+  <label class="label form__label" for="password">Password</label>
+  <input
+    class="input form__input"
+    id="password"
+    type="password"
+    name="password"
+  />
+  <button
+    class="button button--cta button--fullwidth login-form__submit"
+    type="submit"
+  >
+    Login
+  </button>
+</form>
+{% endblock %}

@@ -23,8 +23,8 @@ templates.env.filters["autoversion"] = autoversion
 
 
 @router.get("/", response_class=HTMLResponse)
-def home() -> Response:
-    return HTMLResponse("<h1>Home</h1>")
+def home(request: Request) -> Response:
+    return templates.TemplateResponse("home.html", {"request": request})
 
 
 @router.get("/login", response_class=HTMLResponse)

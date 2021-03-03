@@ -150,6 +150,29 @@ or by using the Makefile.
 make mkdocs
 ```
 
+## Styling
+
+The base page template automatically loads the CSS file `static/global.css`, which defines styles that should apply across the website. In addition, it includes a block named `extra_css` which allows child templates to load additional CSS files, as shown in the following example.
+
+```html
+{% block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', path='css/login.css') | autoversion }}"
+/>
+{% endblock %}
+```
+
+Remember to use the `autoversion` filter to avoid caching issues.
+
+The following rules should be followed when styling.
+
+- Use the BEM naming scheme wherever reasonable.
+- Avoid using id values in style rule selectors.
+- Avoid using composite selectors.
+- Every page should have its own CSS file, which is only loaded on that page. Styles which apply to multiple pages should be defined in a separate file. If they in principle apply to all pages, they should be defined in `static/global.css`.
+- Variables should be used for all color values, and semantic colour variables are strongly preferred. For example, use `--color-success` rather than, say, `--green`.
+
 ## Jinja2 templates
 
 The website is using Jinja2 for rendering content.

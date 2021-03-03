@@ -1,0 +1,90 @@
+/*@import "https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css";*/
+
+/*----------------------------------------*\
+  VARIABLES
+\*----------------------------------------*/
+
+:root {
+  /* COLORS */
+  --black: #000000;
+  --green: #02b302;
+  --lightgrey: lightgrey;
+  --lightred: #faeded;
+  --red: #ff0000;
+  --white: #ffffff;
+
+  /* SEMANTIC COLORS */
+  --color-cta: var(--green);
+  --color-cta-hover: #018801;
+  --color-error: var(--red);
+  --color-error-background: var(--lightred);
+  --color-text-default: var(--black);
+
+  /* FONT WEIGHT */
+  --bold: 600;
+
+  /* LAYOUT */
+  --border-radius-default: 4px;
+
+  /* TIMING */
+  --transition-default: 0.3s;
+}
+
+.button {
+  background-color: var(--white);
+  border: 1px solid var(--lightgrey);
+  border-radius: var(--border-radius-default);
+  color: var(--color-text-default);
+  font-size: 1rem;
+  padding: 0.5rem 0.7rem;
+  transition: var(--transition-default);
+}
+
+.button--cta {
+  background-color: var(--color-cta);
+  color: var(--white);
+}
+
+.button--cta:hover,
+.button--cta:active {
+  background-color: var(--color-cta-hover);
+}
+
+.button--fullwidth {
+  display: block;
+  width: 100%;
+}
+
+.form__input {
+  display: block;
+  margin-top: 0.4rem;
+}
+
+.form__label {
+  display: block;
+  margin: 1rem 0 0 0;
+}
+
+.input {
+  border: 1px solid var(--lightgrey);
+  border-radius: var(--border-radius-default);
+  box-shadow: none;
+  padding: 0.4rem;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.notification {
+  border: 1px solid var(--color-text-default);
+  border-radius: var(--border-radius-default);
+  color: var(--color-text-default);
+  font-size: 1rem;
+  padding: 1rem;
+}
+
+.notification--error {
+  background-color: var(--color-error-background);
+  border-color: var(--color-error);
+}
