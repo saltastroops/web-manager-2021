@@ -1,15 +1,15 @@
 from typing import Dict
 
+from aiomysql import Pool
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 
-from app.dependencies import get_settings
+from app.dependencies import get_current_user, get_db, get_settings
 from app.models.pydantic import AccessToken, User
 from app.service import block
 from app.settings import Settings
 from app.util import auth
-from app.util.auth import get_current_user
 
 router = APIRouter()
 
@@ -23,6 +23,7 @@ router = APIRouter()
 def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     settings: Settings = Depends(get_settings),
+    db: Pool = Depends(get_db),
 ) -> AccessToken:
     """
     Request an authentication token.
@@ -38,7 +39,7 @@ def login_for_access_token(
 
     Note that the token expires 24 hours after being issued.
     """
-    user = auth.authenticate_user(form_data.username, form_data.password)
+    user = auth.authenticate_user(form_data.username, form_data.password, db)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

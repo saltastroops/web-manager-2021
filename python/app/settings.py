@@ -9,6 +9,9 @@ class Settings(BaseSettings):
     root level of the project). The environment variable names may be in uppercase.
     """
 
+    # DSN for the SALT Science Database
+    sdb_dsn: str
+
     # Secret key for encoding JWT tokens.
     secret_key: str
 

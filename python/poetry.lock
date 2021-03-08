@@ -171,6 +171,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "dsnparse"
+version = "0.1.15"
+description = "parse dsn urls"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "ecdsa"
 version = "0.14.1"
 description = "ECDSA cryptographic signature library (pure python)"
@@ -938,7 +946,7 @@ testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "d399f45074589392d25c3afdb6d3a8479a17250e98f1985d7fc2255eba0f5764"
+content-hash = "b603bb0c31bf5e5bf3416e2f6e5a55d7d7308c2bc0c1d122dcfa64ccdd2b18c0"
 
 [metadata.files]
 aiofiles = [
@@ -1091,6 +1099,9 @@ cryptography = [
 distlib = [
     {file = "distlib-0.3.1-py2.py3-none-any.whl", hash = "sha256:8c09de2c67b3e7deef7184574fc060ab8a793e7adbb183d942c389c8b13c52fb"},
     {file = "distlib-0.3.1.zip", hash = "sha256:edf6116872c863e1aa9d5bb7cb5e05a022c519a4594dc703843343a9ddd9bff1"},
+]
+dsnparse = [
+    {file = "dsnparse-0.1.15.tar.gz", hash = "sha256:2ac5705b17cb28e8b115053c2d51cf3321dc2041b1d75e2db6157e05146d0fba"},
 ]
 ecdsa = [
     {file = "ecdsa-0.14.1-py2.py3-none-any.whl", hash = "sha256:e108a5fe92c67639abae3260e43561af914e7fd0d27bae6d2ec1312ae7934dfe"},

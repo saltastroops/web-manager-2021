@@ -8,19 +8,17 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, Optional, cast
 from urllib.parse import unquote
 
-from fastapi import Depends, HTTPException
+from aiomysql import Pool
+from fastapi import HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.security.utils import get_authorization_scheme_param
-from jose import JWTError, jwt
+from jose import jwt
 from passlib.context import CryptContext
-from starlette import status
 from starlette.requests import Request
 from starlette.status import HTTP_401_UNAUTHORIZED
 
-from app.dependencies import get_settings
 from app.models.pydantic import AccessToken, User
 from app.service import user as user_service
-from app.settings import Settings
 
 ALGORITHM = "HS256"
 
@@ -64,8 +62,6 @@ class OAuth2TokenOrCookiePasswordBearer(OAuth2PasswordBearer):
         return param
 
 
-oauth2_scheme = OAuth2TokenOrCookiePasswordBearer("api/token")
-
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
@@ -79,7 +75,7 @@ def get_password_hash(password: str) -> str:
     return cast(str, pwd_context.hash(password))
 
 
-def authenticate_user(username: str, password: str) -> Optional[User]:
+def authenticate_user(username: str, password: str, db: Pool) -> Optional[User]:
     """
     Authenticate a user with a username and password.
 
@@ -119,26 +115,3 @@ def create_access_token(secret_key: str, user: User) -> AccessToken:
     )
 
     return AccessToken(access_token=token, token_type="bearer")  # nosec
-
-
-def get_current_user(
-    settings: Settings = Depends(get_settings), token: str = Depends(oauth2_scheme)
-) -> User:
-    """Get the currently logged in user."""
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials.",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=[ALGORITHM])
-        username = payload.get("sub")
-        if username is None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-    user = user_service.get_user(username)
-    if user is None:
-        raise credentials_exception
-
-    return User(**user.dict())  # turn UserInDB into User instance

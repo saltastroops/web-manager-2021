@@ -5,9 +5,11 @@ from urllib.parse import unquote
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
+from aiomysql import Pool
 from requests import Session
 from starlette import status
 
+from app.main import app
 from app.models.pydantic import User
 from app.util import auth
 
@@ -44,7 +46,9 @@ def test_login_incorrect_credentials_are_rejected(
 ) -> None:
     """The login page rejects incorrect user credentials."""
 
-    def mock_authenticate_user(username: str, password: str) -> Optional[User]:
+    def mock_authenticate_user(
+        username: str, password: str, db: Pool
+    ) -> Optional[User]:
         if password != "secret":
             return None
         return User(username=username)
@@ -65,7 +69,9 @@ def test_login_incorrect_credentials_are_rejected(
 def test_login_home_after_logging_in(client: Session, monkeypatch: MonkeyPatch) -> None:
     """The login page by default redirects to the home page after logging in."""
 
-    def mock_authenticate_user(username: str, password: str) -> Optional[User]:
+    def mock_authenticate_user(
+        username: str, password: str, db: Pool
+    ) -> Optional[User]:
         if password != "secret":
             return None
         return User(username=username)
@@ -84,7 +90,9 @@ def test_login_redirect_after_logging_in(
 ) -> None:
     """The login page redirects after logging in."""
 
-    def mock_authenticate_user(username: str, password: str) -> Optional[User]:
+    def mock_authenticate_user(
+        username: str, password: str, db: Pool
+    ) -> Optional[User]:
         if password != "secret":
             return None
         return User(username=username)
@@ -107,7 +115,9 @@ def test_login_sets_authorization_cookie(
 ) -> None:
     """An Authorization cookie is set when logging in is successful."""
 
-    def mock_authenticate_user(username: str, password: str) -> Optional[User]:
+    def mock_authenticate_user(
+        username: str, password: str, db: Pool
+    ) -> Optional[User]:
         if password != "secret":
             return None
         return User(username=username)
@@ -139,12 +149,15 @@ def test_redirect_after_successful_login(
 ) -> None:
     """The user is redirected to the originally requested page if they had to login."""
 
-    def mock_authenticate_user(username: str, password: str) -> Optional[User]:
+    def mock_authenticate_user(
+        username: str, password: str, db: Pool
+    ) -> Optional[User]:
         if password != "secret":
             return None
         return User(username=username)
 
     monkeypatch.setattr(auth, "authenticate_user", mock_authenticate_user)
+
     # try to access a secured page
     response = client.get("/proposals")
 
@@ -159,3 +172,6 @@ def test_redirect_after_successful_login(
     assert redirect_url
     response = client.get(redirect_url)
     assert "proposals" in response.text.lower()
+
+    # clean up
+    app.dependency_overrides = {}

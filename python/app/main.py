@@ -12,6 +12,7 @@ from starlette.responses import (
 )
 from starlette.staticfiles import StaticFiles
 
+from app.dependencies import get_db, get_settings
 from app.routers.api import router as api_router
 from app.routers.views import router as views_router
 
@@ -21,6 +22,20 @@ app.include_router(api_router)
 app.include_router(views_router)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+@app.on_event("startup")
+async def startup_event() -> None:
+    """Connect to the SALT Science Database."""
+    settings = get_settings()
+    if settings.sdb_dsn:  # the DSN is not defined for unit tests
+        await get_db.connect(settings.sdb_dsn)
+
+
+@app.on_event("shutdown")
+async def shutdown_event() -> None:
+    """Close the database connection."""
+    await get_db.close()
 
 
 def _is_api_request(request: Request) -> bool:

@@ -47,6 +47,9 @@ You can find the list of settings in the module `app.settings`; each property of
 openssl rand -hex 32
 ```
 
+!!! note
+The .env file is also read for the unit tests, unless its environment variables are defined elsewhere as well. The `conftest.py` file therefore contains a fixture which explicitly defines all these variables and sets their value to an empty string.
+
 ## Running the server
 
 You can now run the server.
@@ -57,10 +60,10 @@ You can now run the server.
 uvicorn --reload --port 8001 app.main:app
 ```
 
-!!!tip
+!!! tip
 Note the non-default port. This has been chosen as the development documentation server (MkDocs) is listening on port 8000.
 
-However, you can also use the provided Makefile to launch it.
+    However, you can also use the provided Makefile to launch it.
 
 ```shell
 # In web-manager

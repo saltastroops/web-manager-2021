@@ -2,18 +2,18 @@ import base64
 from typing import Optional
 from urllib.parse import quote
 
+from aiomysql import Pool
 from fastapi import APIRouter, Depends, Form
 from starlette import status
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, RedirectResponse, Response
 from starlette.templating import Jinja2Templates
 
-from app.dependencies import get_settings
+from app.dependencies import get_current_user, get_db, get_settings
 from app.jinja2.filters import autoversion
 from app.models.pydantic import User
 from app.settings import Settings
 from app.util import auth
-from app.util.auth import get_current_user
 
 router = APIRouter()
 
@@ -44,12 +44,13 @@ def login_post(
     password: Optional[str] = Form(""),
     redirect: Optional[str] = None,
     settings: Settings = Depends(get_settings),
+    db: Pool = Depends(get_db),
 ) -> Response:
     if not redirect:
         redirect = base64.b64encode(b"/").decode("utf-8")
 
     if username and password:
-        user = auth.authenticate_user(username, password)
+        user = auth.authenticate_user(username, password, db)
     else:
         user = None
     if not user:

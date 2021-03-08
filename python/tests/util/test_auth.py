@@ -4,6 +4,7 @@ from typing import Any, Dict, Optional, cast
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
+from aiomysql import Pool
 from fastapi import HTTPException
 from jose import jwt
 from pydantic import BaseModel
@@ -12,7 +13,6 @@ from starlette.requests import Request
 
 from app.models.pydantic import UserInDB
 from app.service import user as user_service
-from app.settings import Settings
 from app.util import auth
 from app.util.auth import OAuth2TokenOrCookiePasswordBearer
 
@@ -137,7 +137,7 @@ def test_authenticate_user_with_incorrect_credentials(
         )
 
     monkeypatch.setattr(user_service, "get_user", mock_get_user)
-    assert auth.authenticate_user(username, password) is None
+    assert auth.authenticate_user(username, password, cast(Pool, {})) is None
 
 
 @pytest.mark.parametrize(
@@ -155,7 +155,7 @@ def test_authenticate_user_with_correct_credentials(
         )
 
     monkeypatch.setattr(user_service, "get_user", mock_get_user)
-    assert auth.authenticate_user(username, password) is not None
+    assert auth.authenticate_user(username, password, cast(Pool, {})) is not None
 
 
 @pytest.mark.parametrize("payload", [{"a": "b"}, {"c": 123, "d": True}])
@@ -187,62 +187,3 @@ def test_create_jwt_token(payload: Dict[str, Any]) -> None:
     # has an exp key.
     for key in payload:
         assert decoded_token[key] == payload[key]
-
-
-@pytest.mark.parametrize(
-    "token_payload",
-    [
-        # no token payload
-        {},
-        # wrong token payloads
-        {"su": "johndoe"},
-        {"sur": "johndoe"},
-        {"subs": "johndoe"},
-        # non-existing username
-        {"sub": "john"},
-    ],
-)
-def test_get_current_user_fails_for_invalid_token(
-    token_payload: Dict[str, Any], monkeypatch: MonkeyPatch
-) -> None:
-    """get_current_user fails for invalid tokens."""
-
-    def mock_get_user(username: str) -> Optional[UserInDB]:
-        if username == "johndoe":
-            return UserInDB(username="johndoe", hashed_password="whatever")
-        return None
-
-    monkeypatch.setattr(user_service, "get_user", mock_get_user)
-
-    # create the token
-    secret_key = "very-secret"
-    token = jwt.encode(token_payload, secret_key, algorithm="HS256")
-
-    with pytest.raises(HTTPException) as excinfo:
-        auth.get_current_user(Settings(secret_key=secret_key), token)
-    assert excinfo.value.status_code == 401
-
-
-def test_get_current_user_fails_for_corrupted_token() -> None:
-    secret_key = "very-secret"
-    token = "corrupted-token"
-    with pytest.raises(HTTPException) as excinfo:
-        auth.get_current_user(Settings(secret_key=secret_key), token)
-    assert excinfo.value.status_code == 401
-
-
-def test_get_current_user_returns_user(monkeypatch: MonkeyPatch) -> None:
-    def mock_get_user(username: str) -> Optional[UserInDB]:
-        if username == "johndoe":
-            return UserInDB(username="johndoe", hashed_password="whatever")
-        return None
-
-    monkeypatch.setattr(user_service, "get_user", mock_get_user)
-
-    # create the token
-    secret_key = "very-secret"
-    token = jwt.encode({"sub": "johndoe"}, secret_key, algorithm="HS256")
-
-    user = auth.get_current_user(Settings(secret_key=secret_key), token)
-    assert user.username == "johndoe"
-    assert not hasattr(user, "hashed_password")

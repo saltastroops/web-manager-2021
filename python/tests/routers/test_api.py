@@ -2,9 +2,11 @@ from typing import Optional
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
+from aiomysql import Pool
 from requests import Session
 from starlette import status
 
+from app.dependencies import get_current_user
 from app.models.pydantic import User
 from app.settings import Settings
 from app.util import auth
@@ -26,7 +28,9 @@ def test_token_for_incorrect_credentials(
 ) -> None:
     """Calling /api/token with incorrect credentials gives a 401 error."""
 
-    def mock_authenticate_user(username: str, password: str) -> Optional[User]:
+    def mock_authenticate_user(
+        username: str, password: str, db: Pool
+    ) -> Optional[User]:
         if username + "-pwd" == password:
             return User(username=username)
         return None
@@ -46,7 +50,9 @@ def test_token_returns_authentication_token(
 ) -> None:
     """/api/token returns a valid authentication token."""
 
-    def mock_authenticate_user(username: str, password: str) -> Optional[User]:
+    def mock_authenticate_user(
+        username: str, password: str, db: Pool
+    ) -> Optional[User]:
         if username + "-pwd" == password:
             return User(username=username)
         return None
@@ -58,5 +64,5 @@ def test_token_returns_authentication_token(
     token = resp.json()["access_token"]
 
     # ... and check that it is valid
-    user = auth.get_current_user(settings, token)
+    user = get_current_user(settings, token)
     assert user.username == "jane"
