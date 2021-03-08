@@ -1,0 +1,679 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.5">
+    
+    
+      
+        <title>Development - SALT Web Manager</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.77f3fd56.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#developing-the-web-manager" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="SALT Web Manager" class="md-header__button md-logo" aria-label="SALT Web Manager">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SALT Web Manager
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Development
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SALT Web Manager" class="md-nav__button md-logo" aria-label="SALT Web Manager">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    SALT Web Manager
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        API
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Development
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Development
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    Requirements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#settings" class="md-nav__link">
+    Settings
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-server" class="md-nav__link">
+    Running the server
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formatting-and-testing" class="md-nav__link">
+    Formatting and Testing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-a-test-database" class="md-nav__link">
+    Using a test database
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#making-use-of-the-git-pre-commit-hook" class="md-nav__link">
+    Making use of the git pre-commit hook
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#end-to-end-tests" class="md-nav__link">
+    End-to-end tests
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    Documentation
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implementation/" class="md-nav__link">
+        Implementation
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    Requirements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#settings" class="md-nav__link">
+    Settings
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-server" class="md-nav__link">
+    Running the server
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formatting-and-testing" class="md-nav__link">
+    Formatting and Testing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-a-test-database" class="md-nav__link">
+    Using a test database
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#making-use-of-the-git-pre-commit-hook" class="md-nav__link">
+    Making use of the git pre-commit hook
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#end-to-end-tests" class="md-nav__link">
+    End-to-end tests
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    Documentation
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="developing-the-web-manager">Developing the Web Manager</h1>
+<p>This page outlines how to develop the Web Manager.</p>
+<h2 id="requirements">Requirements</h2>
+<p>The following must be installed on your machine.</p>
+<ul>
+<li><a href="https://www.python.org">Python</a> 3.9.0 or higher</li>
+<li><a href="https://python-poetry.org">Poetry</a> 1.1.0 or higher</li>
+</ul>
+<p>In case you are using the Docker image, you probably need a Linux or macOS machine, and you certainly need Docker:</p>
+<ul>
+<li><a href="https://www.docker.com">Docker</a> 20.10.0 or higher</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<p>Clone the repository.</p>
+<pre><code class="language-shell">git clone git@github.com:saltastroops/web-manager-2021.git web-manager
+</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You may call the created directory whatever you want. However, the following instructions assume it is called <code>web-manager</code>.</p>
+</div>
+<p>Go to the directory  <code>web-manager/python</code> and install the required packages.</p>
+<pre><code class="language-shell">cd web-manager/python
+poetry install
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In theory this is all you have to do. In practice you might have to jump through various hoops and loops to get the <code>cryptography</code> package installed. The <a href="https://cryptography.io/en/latest/installation.html">installation instructions</a> may be of help, but you might still have to consult Google.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are using an IDE such as IntelliJ, you might have to mark the <code>python</code> folder as a sources root folder, as otherwise the IDE might complain about incorrect import statements.</p>
+</div>
+<h2 id="settings">Settings</h2>
+<p>All settings for the Web Manager must be provided as environment variables, or in an <code>.env</code> file at the project's root level. <em>Remember that the <code>.env</code> file must <strong>never</strong> be put under version control.</em></p>
+<p>You can find the list of settings in the module <code>app.settings</code>; each property of the <code>Settings</code> class corresponds to an environment variable. The names aren't case-sensitive; so, for example, the property <code>secret_key</code> can be defined in an environment variable <code>SECRET_KEY</code>. Talking of secret keys, any secret key should be generated with <code>openssh</code>.</p>
+<pre><code class="language-shell">openssl rand -hex 32
+</code></pre>
+<h2 id="running-the-server">Running the server</h2>
+<p>You can now run the server.</p>
+<pre><code class="language-shell"># In web-manager/python
+
+uvicorn --reload --port 8001 app.main:app
+</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Note the non-default port. This has been chosen as the development documentation server (MkDocs) is listening on port 8000.</p>
+</div>
+<p>However, you can also use the provided Makefile to launch it.</p>
+<pre><code class="language-shell"># In web-manager
+
+make start
+</code></pre>
+<h2 id="formatting-and-testing">Formatting and Testing</h2>
+<p>The Makefile provides various rules for formatting and testing.</p>
+<ul>
+<li>Formatting the code: <code>make black</code></li>
+<li>Sorting the import statements: <code>make isort</code></li>
+<li>Checking styling: <code>make flake8</code></li>
+<li>Checking types: <code>make mypy</code></li>
+<li>Checking for security issues: <code>make bandit</code></li>
+<li>Running pytest: <code>make pytest</code></li>
+<li>Showing code coverage: <code>make coverage</code></li>
+<li>Running end-to-end tests: <code>make e2e</code></li>
+<li>Launching the Cypress test runner: <code>make cypress</code></li>
+<li>Running formatting and other tests: <code>make test</code></li>
+<li>Running tox: <code>make tox</code></li>
+</ul>
+<h2 id="using-a-test-database">Using a test database</h2>
+<p>For development purposes the easiest choice is to work with a copy of the SALT Science Database (SDB). But there are cases where just using a copy is not ideal, and a database without sensitive information is called for. Notable examples are unit tests checking against database content and screen shots for the documentation.</p>
+<p>To facilitate the creation of such a test database there is a command line tool <code>createtestdb</code> which clones a source database (which should be a copy of the SDB) and then replaces sensitive information in the new database with fake data.</p>
+<p>This tool is installed automatically when you run <code>poetry install</code>. It takes the following options.</p>
+<table>
+<thead>
+<tr>
+<th>Command line option</th>
+<th>Description</th>
+<th>Required?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>--help</td>
+<td>Output a help message</td>
+<td>No</td>
+</tr>
+<tr>
+<td>--source-db-host</td>
+<td>Host of the source database</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>--source-db-name</td>
+<td>Name of the source database</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>--source-db-password</td>
+<td>Password of the source database user account</td>
+<td>No</td>
+</tr>
+<tr>
+<td>--source-db-user</td>
+<td>Username of the source database user account</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>--test-db-host</td>
+<td>Host of the test database</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>--test-db-name</td>
+<td>Name of the test database</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>--test-db-password</td>
+<td>Password of the test database user account</td>
+<td>No</td>
+</tr>
+<tr>
+<td>--test-db-user</td>
+<td>Username of the test database user account</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p>While the password options are not required, you will be prompted for the passwords if you don't include them.</p>
+<p>When running the <code>createtestdb</code> command, you might get an error stating that the definer 'abcd'@'some_host' does not exist (obviously with a username and host other than 'abcd' and 'some_host'). In this case, you should create the missing user in MySQL and grant the user full privileges.</p>
+<pre><code class="language-mysql">CREATE USER 'abcd'@'some_host' IDENTIFIED BY 'some_strong_password';
+GRANT ALL ON *.* TO 'abcd'@'some_host';
+</code></pre>
+<p>The following sensitive information is replaced.</p>
+<ul>
+<li>The username in the <code>PiptUser</code> table.</li>
+<li>The first name, surname, email address and phone number in the <code>Investigator</code> table.</li>
+<li>The right ascension and declination in the <code>TargetCoordinates</code> table.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>While these details should be the most sensitive ones, this does not mean that the resulting database should be considered public. Indeed, you should consider it as confidential as the SDB, and you should only share it with people with whom you would be comfortable sharing the SDB itself.</p>
+</div>
+<h2 id="making-use-of-the-git-pre-commit-hook">Making use of the git pre-commit hook</h2>
+<p>As forgetting to format code or run tests is human, but having to deal with failing GitHub actions is not fun, it is advisable to use git hooks to ensure whatever should be in place is in place before pushing your changes.</p>
+<p>For example, you can create a file <code>.git/hooks/pre-commit</code> with the content</p>
+<pre><code class="language-shell">make black
+make isort
+</code></pre>
+<p>and make it executable,</p>
+<pre><code class="language-shell"># In web-manager
+
+chmod a+x .git/hooks/pre-commit
+</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you forget to make the file executable, the hook will just not be executed, without any error raised.</p>
+</div>
+<p>Similarly you can add pre-push hook by creating a file <code>.git/hooks/pre-push</code> with the content</p>
+<pre><code class="language-shell">make test
+</code></pre>
+<p>Remember to make this file executable.</p>
+<pre><code class="language-shell"># In web-manager
+
+chmod a+x .git/hooks/pre-push
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In particular the pre-commit hook is <em>not</em> effective, as it formats <em>all</em> files, not just the committed ones. Also, it does not commit any reformatted code; so after the commit you may have new changes to commit...</p>
+</div>
+<h2 id="end-to-end-tests">End-to-end tests</h2>
+<p>The end-to-end tests require the server to run, but the Makefile commands for running the tests (<code>cypress</code> and <code>end2end</code>) do not launch it. So you have to start the server yourself. The server must be listening on port 8001.</p>
+<p>In case you need to skip the end-to-end tests when running tox, you can set the environment variable <code>SKIP_E2E</code> to any non-empty value. This is done for the Github Action workflows.</p>
+<h2 id="documentation">Documentation</h2>
+<p>The documentation is created with <a href="https://squidfunk.github.io/mkdocs-material/">Material for MkDocs</a>. You can start a development server for viewing the documentation either by executing</p>
+<pre><code class="language-shell"># In web-manager
+
+mkdocs serve
+</code></pre>
+<p>or by using the Makefile.</p>
+<pre><code class="language-shell"># In web-manager
+
+make mkdocs
+</code></pre>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../api/" class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              API
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../implementation/" class="md-footer__link md-footer__link--next" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Implementation
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.5cf3e710.min.js"></script>
+      
+    
+  </body>
+</html>
