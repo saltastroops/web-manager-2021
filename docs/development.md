@@ -22,7 +22,7 @@ git clone git@github.com:saltastroops/web-manager-2021.git web-manager
 ```
 
 !!! tip
-You may call the created directory whatever you want. However, the following instructions assume it is called `web-manager`.
+    You may call the created directory whatever you want. However, the following instructions assume it is called `web-manager`.
 
 Go to the directory `web-manager/python` and install the required packages.
 
@@ -32,10 +32,10 @@ poetry install
 ```
 
 !!! note
-In theory this is all you have to do. In practice you might have to jump through various hoops and loops to get the `cryptography` package installed. The [installation instructions](https://cryptography.io/en/latest/installation.html) may be of help, but you might still have to consult Google.
+    In theory this is all you have to do. In practice you might have to jump through various hoops and loops to get the `cryptography` package installed. The [installation instructions](https://cryptography.io/en/latest/installation.html) may be of help, but you might still have to consult Google.
 
 !!! note
-If you are using an IDE such as IntelliJ, you might have to mark the `python` folder as a sources root folder, as otherwise the IDE might complain about incorrect import statements.
+    If you are using an IDE such as IntelliJ, you might have to mark the `python` folder as a sources root folder, as otherwise the IDE might complain about incorrect import statements.
 
 ## Settings
 
@@ -48,7 +48,7 @@ openssl rand -hex 32
 ```
 
 !!! note
-The .env file is also read for the unit tests, unless its environment variables are defined elsewhere as well. The `conftest.py` file therefore contains a fixture which explicitly defines all these variables and sets their value to an empty string.
+    The .env file is also read for the unit tests, unless its environment variables are defined elsewhere as well. The `conftest.py` file therefore contains a fixture which explicitly defines all these variables and sets their value to an empty string. The only exception is the environment variable `TEST_SDB_DSN` whose value will not be set to an empty string.
 
 ## Running the server
 
@@ -61,9 +61,9 @@ uvicorn --reload --port 8001 app.main:app
 ```
 
 !!! tip
-Note the non-default port. This has been chosen as the development documentation server (MkDocs) is listening on port 8000.
+    Note the non-default port. This has been chosen as the development documentation server (MkDocs) is listening on port 8000.
 
-    However, you can also use the provided Makefile to launch it.
+However, you can also use the provided Makefile to launch it.
 
 ```shell
 # In web-manager
@@ -110,9 +110,9 @@ chmod a+x .git/hooks/pre-commit
 ```
 
 !!! warning
-If you forget to make the file executable, the hook will just not be executed, without any error raised.
-
-Similarly you can add a pre-push hook by creating a file `.git/hooks/pre-push` with the content
+    If you forget to make the file executable, the hook will just not be executed, without any error raised.
+    
+    Similarly you can add a pre-push hook by creating a file `.git/hooks/pre-push` with the content
 
 ```shell
 make test
@@ -127,7 +127,17 @@ chmod a+x .git/hooks/pre-push
 ```
 
 !!! note
-In particular the pre-commit hook is _not_ effective, as it formats _all_ files, not just the committed ones. Also, it does not commit any reformatted code; so after the commit you may have new changes to commit...
+    In particular the pre-commit hook is _not_ effective, as it formats _all_ files, not just the committed ones. Also, it does not commit any reformatted code; so after the commit you may have new changes to commit...
+
+## Unit tests
+
+`pytest` is used for the unit-testing, and all the test files are contained in the `tests` folder. The structure within this folder should mirror the structure within the `app` folder. The name of all files containing test functions must start with `test_`.
+
+### Using a test database
+
+If a unit test requires access to a (test) database, you should use the `db` fixture, which returns an `aiomysql` database pool. The DSN of the database must be set in an environment variable called `TEST_SDB_DSN`. This variable may be defined in the `.env` file.
+
+Any test function using the `db` fixture must be an async function and must be marked with `pytest.mark.asyncio`. This implies that you cannot use Starlette's test client (as, for example, provided by the `client` fixture) together with the `db` fixture.
 
 ## End-to-end tests
 
