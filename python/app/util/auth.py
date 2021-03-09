@@ -4,6 +4,7 @@ Utility functions for authentication and authorization.
 The code in this module has in wide oparts been taken from the FastAPI tutorial,
 https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/.
 """
+import hashlib
 from datetime import datetime, timedelta
 from typing import Any, Dict, Optional, cast
 from urllib.parse import unquote
@@ -13,7 +14,6 @@ from fastapi import HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.security.utils import get_authorization_scheme_param
 from jose import jwt
-from passlib.context import CryptContext
 from starlette.requests import Request
 from starlette.status import HTTP_401_UNAUTHORIZED
 
@@ -62,27 +62,24 @@ class OAuth2TokenOrCookiePasswordBearer(OAuth2PasswordBearer):
         return param
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
 def verify_password(password: str, hashed_password: str) -> bool:
     """Check a plain text password against a hash."""
-    return cast(bool, pwd_context.verify(password, hashed_password))
+    return get_password_hash(password) == hashed_password
 
 
 def get_password_hash(password: str) -> str:
     """Hash a plain text password."""
-    return cast(str, pwd_context.hash(password))
+    return hashlib.md5(password.encode("utf-8")).hexdigest()
 
 
-def authenticate_user(username: str, password: str, db: Pool) -> Optional[User]:
+async def authenticate_user(username: str, password: str, db: Pool) -> Optional[User]:
     """
     Authenticate a user with a username and password.
 
     If the combination of username and password are valid, the corresponding user is
     returned. Otherwise None is returned.
     """
-    user = user_service.get_user(username)
+    user = await user_service.get_user(username, db)
     if not user:
         return None
     if not verify_password(password, user.hashed_password):

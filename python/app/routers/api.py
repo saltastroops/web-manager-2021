@@ -20,7 +20,7 @@ router = APIRouter()
     response_description="An authentication token",
     response_model=AccessToken,
 )
-def login_for_access_token(
+async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     settings: Settings = Depends(get_settings),
     db: Pool = Depends(get_db),
@@ -39,7 +39,7 @@ def login_for_access_token(
 
     Note that the token expires 24 hours after being issued.
     """
-    user = auth.authenticate_user(form_data.username, form_data.password, db)
+    user = await auth.authenticate_user(form_data.username, form_data.password, db)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

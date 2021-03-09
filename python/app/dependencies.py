@@ -24,7 +24,7 @@ get_db = DatabasePool()
 oauth2_scheme = OAuth2TokenOrCookiePasswordBearer("api/token")
 
 
-def get_current_user(
+async def get_current_user(
     settings: Settings = Depends(get_settings),
     token: str = Depends(oauth2_scheme),
     db: Pool = Depends(get_db),
@@ -42,7 +42,7 @@ def get_current_user(
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = user_service.get_user(username)
+    user = await user_service.get_user(username, db)
     if user is None:
         raise credentials_exception
 

@@ -38,7 +38,7 @@ def login(request: Request, redirect: Optional[str] = None) -> Response:
 
 
 @router.post("/login", response_class=HTMLResponse)
-def login_post(
+async def login_post(
     request: Request,
     username: Optional[str] = Form(""),
     password: Optional[str] = Form(""),
@@ -50,7 +50,7 @@ def login_post(
         redirect = base64.b64encode(b"/").decode("utf-8")
 
     if username and password:
-        user = auth.authenticate_user(username, password, db)
+        user = await auth.authenticate_user(username, password, db)
     else:
         user = None
     if not user:

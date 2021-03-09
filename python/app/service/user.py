@@ -1,11 +1,34 @@
 """User service."""
+from aiomysql import Pool
+
 from app.models.pydantic import User, UserInDB
-from app.util import auth
 
 
-def get_user(username: str) -> UserInDB:
+async def get_user(username: str, db: Pool) -> UserInDB:
+    sql = """
+SELECT
+    Username,
+    Password,
+    FirstName,
+    Surname,
+    Email
+FROM PiptUser AS u
+    JOIN Investigator AS i ON (u.Investigator_Id=i.Investigator_Id)
+WHERE Username=%(username)s
+"""
+    async with db.acquire() as conn:
+        async with conn.cursor() as cur:
+            await cur.execute(sql, {"username": username})
+            r = await cur.fetchone()
+            if r is None:
+                raise ValueError(f"There exists no user for the username {username}.")
+
     return UserInDB(
-        username=username, hashed_password=auth.get_password_hash("!" + username)
+        email=r.email,
+        family_name=r.family_name,
+        given_name=r.given_name,
+        hashed_password=r.hashed_password,
+        username=r.username,
     )
 
 

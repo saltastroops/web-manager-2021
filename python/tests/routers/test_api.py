@@ -3,13 +3,14 @@ from typing import Optional
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from aiomysql import Pool
+from jose import jwt
 from requests import Session
 from starlette import status
 
-from app.dependencies import get_current_user
 from app.models.pydantic import User
 from app.settings import Settings
 from app.util import auth
+from app.util.auth import ALGORITHM
 
 
 @pytest.mark.parametrize(
@@ -28,11 +29,16 @@ def test_token_for_incorrect_credentials(
 ) -> None:
     """Calling /api/token with incorrect credentials gives a 401 error."""
 
-    def mock_authenticate_user(
+    async def mock_authenticate_user(
         username: str, password: str, db: Pool
     ) -> Optional[User]:
         if username + "-pwd" == password:
-            return User(username=username)
+            return User(
+                email="whoever@example.com",
+                family_name="Doe",
+                given_name="Jane",
+                username=username,
+            )
         return None
 
     monkeypatch.setattr(auth, "authenticate_user", mock_authenticate_user)
@@ -50,11 +56,16 @@ def test_token_returns_authentication_token(
 ) -> None:
     """/api/token returns a valid authentication token."""
 
-    def mock_authenticate_user(
+    async def mock_authenticate_user(
         username: str, password: str, db: Pool
     ) -> Optional[User]:
         if username + "-pwd" == password:
-            return User(username=username)
+            return User(
+                email="jane@example.com",
+                family_name="Doe",
+                given_name="Jane",
+                username=username,
+            )
         return None
 
     monkeypatch.setattr(auth, "authenticate_user", mock_authenticate_user)
@@ -64,5 +75,5 @@ def test_token_returns_authentication_token(
     token = resp.json()["access_token"]
 
     # ... and check that it is valid
-    user = get_current_user(settings, token)
-    assert user.username == "jane"
+    payload = jwt.decode(token, settings.secret_key, algorithms=[ALGORITHM])
+    assert payload["sub"] == "jane"

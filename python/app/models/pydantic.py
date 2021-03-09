@@ -7,6 +7,9 @@ class AccessToken(BaseModel):
 
 
 class User(BaseModel):
+    email: str
+    family_name: str
+    given_name: str
     username: str
 
 

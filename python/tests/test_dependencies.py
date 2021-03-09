@@ -12,6 +12,16 @@ from app.service import user as user_service
 from app.settings import Settings
 
 
+def user_in_db(username: str, hashed_password: str) -> UserInDB:
+    return UserInDB(
+        email="john@example.com",
+        family_name="Doe",
+        given_name="John",
+        hashed_password=hashed_password,
+        username=username,
+    )
+
+
 def test_get_settings(monkeypatch: MonkeyPatch) -> None:
     """get_settings reads in environment variables."""
     monkeypatch.setenv("SECRET_KEY", "very-secret")
@@ -34,14 +44,15 @@ def test_get_settings(monkeypatch: MonkeyPatch) -> None:
         {"sub": "john"},
     ],
 )
-def test_get_current_user_fails_for_invalid_token(
+@pytest.mark.asyncio
+async def test_get_current_user_fails_for_invalid_token(
     token_payload: Dict[str, Any], monkeypatch: MonkeyPatch
 ) -> None:
     """get_current_user fails for invalid tokens."""
 
-    def mock_get_user(username: str) -> Optional[UserInDB]:
+    async def mock_get_user(username: str, db: Pool) -> Optional[UserInDB]:
         if username == "johndoe":
-            return UserInDB(username="johndoe", hashed_password="whatever")
+            return user_in_db(username="johndoe", hashed_password="whatever")
         return None
 
     monkeypatch.setattr(user_service, "get_user", mock_get_user)
@@ -51,22 +62,24 @@ def test_get_current_user_fails_for_invalid_token(
     token = jwt.encode(token_payload, secret_key, algorithm="HS256")
 
     with pytest.raises(HTTPException) as excinfo:
-        get_current_user(Settings(secret_key=secret_key), token)
+        await get_current_user(Settings(secret_key=secret_key), token)
     assert excinfo.value.status_code == 401
 
 
-def test_get_current_user_fails_for_corrupted_token() -> None:
+@pytest.mark.asyncio
+async def test_get_current_user_fails_for_corrupted_token() -> None:
     secret_key = "very-secret"
     token = "corrupted-token"
     with pytest.raises(HTTPException) as excinfo:
-        get_current_user(Settings(secret_key=secret_key), token)
+        await get_current_user(Settings(secret_key=secret_key), token)
     assert excinfo.value.status_code == 401
 
 
-def test_get_current_user_returns_user(monkeypatch: MonkeyPatch) -> None:
-    def mock_get_user(username: str) -> Optional[UserInDB]:
+@pytest.mark.asyncio
+async def test_get_current_user_returns_user(monkeypatch: MonkeyPatch) -> None:
+    async def mock_get_user(username: str, db: Pool) -> Optional[UserInDB]:
         if username == "johndoe":
-            return UserInDB(username="johndoe", hashed_password="whatever")
+            return user_in_db(username="johndoe", hashed_password="whatever")
         return None
 
     monkeypatch.setattr(user_service, "get_user", mock_get_user)
@@ -75,6 +88,7 @@ def test_get_current_user_returns_user(monkeypatch: MonkeyPatch) -> None:
     secret_key = "very-secret"
     token = jwt.encode({"sub": "johndoe"}, secret_key, algorithm="HS256")
 
-    user = get_current_user(Settings(secret_key=secret_key), token)
+    # check the token
+    user = await get_current_user(Settings(secret_key=secret_key), token)
     assert user.username == "johndoe"
     assert not hasattr(user, "hashed_password")

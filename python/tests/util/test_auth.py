@@ -123,39 +123,49 @@ def test_get_password_hash() -> None:
         ("mary", "mary"),  # user does not exist
     ],
 )
-def test_authenticate_user_with_incorrect_credentials(
+@pytest.mark.asyncio
+async def test_authenticate_user_with_incorrect_credentials(
     username: str, password: str, monkeypatch: MonkeyPatch
 ) -> None:
     "authenticate_user returns None for incorrect credentials."
 
-    def mock_get_user(username: str) -> Optional[UserInDB]:
+    async def mock_get_user(username: str, db: Pool) -> Optional[UserInDB]:
         """Returns a user whose password is equal to the username."""
         if username != "peter":
             return None
         return UserInDB(
-            username=username, hashed_password=auth.get_password_hash(username)
+            email="john@example,com",
+            family_name="Doe",
+            given_name="Doe",
+            hashed_password=auth.get_password_hash(username),
+            username=username,
         )
 
     monkeypatch.setattr(user_service, "get_user", mock_get_user)
-    assert auth.authenticate_user(username, password, cast(Pool, {})) is None
+    assert await auth.authenticate_user(username, password, cast(Pool, {})) is None
 
 
 @pytest.mark.parametrize(
     "username,password", [("nosipho", "nosipho"), ("Jane Doe", "Jane Doe")]
 )
-def test_authenticate_user_with_correct_credentials(
+@pytest.mark.asyncio
+async def test_authenticate_user_with_correct_credentials(
     username: str, password: str, monkeypatch: MonkeyPatch
 ) -> None:
     """authenticate_user returns a user for correct credentials."""
 
-    def mock_get_user(username: str) -> UserInDB:
+    async def mock_get_user(username: str, db: Pool) -> UserInDB:
         """Returns a user whose password is equal to the username."""
         return UserInDB(
-            username=username, hashed_password=auth.get_password_hash(username)
+            email="john@example,com",
+            family_name="Doe",
+            given_name="Doe",
+            hashed_password=auth.get_password_hash(username),
+            username=username,
         )
 
     monkeypatch.setattr(user_service, "get_user", mock_get_user)
-    assert auth.authenticate_user(username, password, cast(Pool, {})) is not None
+    assert await auth.authenticate_user(username, password, cast(Pool, {})) is not None
 
 
 @pytest.mark.parametrize("payload", [{"a": "b"}, {"c": 123, "d": True}])
