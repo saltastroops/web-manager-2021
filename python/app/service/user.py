@@ -12,8 +12,8 @@ SELECT
     FirstName,
     Surname,
     Email
-FROM PiptUser AS u
-    JOIN Investigator AS i ON (u.Investigator_Id=i.Investigator_Id)
+FROM PiptUser AS pu
+    JOIN Investigator AS i ON (pu.Investigator_Id=i.Investigator_Id)
 WHERE Username=%(username)s
 """
     async with db.acquire() as conn:
@@ -32,8 +32,21 @@ WHERE Username=%(username)s
     )
 
 
-async def is_administrator(user: User) -> bool:
-    return user.username == "admin42"
+async def is_administrator(user: User, db: Pool) -> bool:
+    """Check whether a user is an administrator."""
+    sql = """
+SELECT COUNT(*) AS c
+FROM PiptUserSetting pus
+JOIN PiptSetting ps ON pus.PiptSetting_Id = ps.PiptSetting_Id
+JOIN PiptUser pu ON pus.PiptUser_Id = pu.PiptUser_Id
+WHERE pu.Username = %(username)s AND ps.PiptSetting_Name='RightAdmin' AND pus.Value >= 2;
+    """
+    with db.acquire() as conn:
+        with conn.cursor() as cur:
+            cur.execute(sql, {"username": user.username})
+            (r,) = cur.fetchone()
+            print(r)
+            return int(r) > 0
 
 
 async def is_mask_cutter(user: User) -> bool:
