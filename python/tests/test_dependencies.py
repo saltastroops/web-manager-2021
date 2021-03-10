@@ -83,7 +83,6 @@ async def test_get_current_user_fails_for_expired_token() -> None:
     to_encode = {"sub": "johndoe", "exp": datetime.utcnow() - timedelta(seconds=100)}
     token = jwt.encode(to_encode, secret_key, algorithm="HS256")
 
-    secret_key = "very-secret"
     with pytest.raises(HTTPException) as excinfo:
         await get_current_user(Settings(secret_key=secret_key), token)
     assert excinfo.value.status_code == 401
