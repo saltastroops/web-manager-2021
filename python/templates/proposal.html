@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Proposal{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', path='js/salt-block-view.js') | autoversion }}"></script>
+{% endblock %}
+
+{% block page_content %}
+<h1>Proposal</h1>
+<salt-block-view
+  proposal-code="{{ proposal_code }}"
+  initial-block-code="{{ block_codes[1] }}"
+  block-codes="{{ block_codes | join(',') }}"
+>
+</salt-block-view>
+{% endblock %}

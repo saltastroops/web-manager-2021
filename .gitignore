@@ -103,6 +103,7 @@ celerybeat.pid
 
 # Environments
 .env
+.env.test
 .venv
 env/
 venv/
@@ -134,5 +135,5 @@ node_modules/
 # IntelliJ
 .idea
 *.iml
-/e2e/cypress/integration
 /e2e/cypress/videos
+/e2e/cypress/screenshots
