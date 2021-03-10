@@ -39,7 +39,9 @@ poetry install
 
 ## Settings
 
-All settings for the Web Manager must be provided as environment variables, or in an `.env` file at the project's root level. _Remember that the `.env` file must **never** be put under version control._
+The Web Manager can be run in test and production mode. This mode is set by an environment variable `MODE`, which must have the (case-insensitive) value "test" or "production".
+
+All settings for the Web Manager must be provided as environment variables, or in a file at the server's root level (i.e. in the `python` folder). For production mode that file must be called `.env`, for test mode it must be called `.env.test`. _Remember that the `.env` and `.env.test` file must **never** be put under version control._
 
 You can find the list of settings in the module `app.settings`; each property of the `Settings` class corresponds to an environment variable. The names aren't case-sensitive; so, for example, the property `secret_key` can be defined in an environment variable `SECRET_KEY`. Talking of secret keys, any secret key should be generated with `openssl`.
 
@@ -47,8 +49,8 @@ You can find the list of settings in the module `app.settings`; each property of
 openssl rand -hex 32
 ```
 
-!!! note
-    The .env file is also read for the unit tests, unless its environment variables are defined elsewhere as well. The `conftest.py` file therefore contains a fixture which explicitly defines all these variables and sets their value to an empty string. The only exception is the environment variable `TEST_SDB_DSN` whose value will not be set to an empty string.
+!!! warning
+    Never run the unit tests or end-to-end tests in production mode. Evil things might happen to your production database!
 
 ## Running the server
 
@@ -135,7 +137,7 @@ chmod a+x .git/hooks/pre-push
 
 ### Using a test database
 
-If a unit test requires access to a (test) database, you should use the `db` fixture, which returns an `aiomysql` database pool. The DSN of the database must be set in an environment variable called `TEST_SDB_DSN`. This variable may be defined in the `.env` file.
+If a unit test requires access to a (test) database, you should use the `db` fixture, which returns an `aiomysql` database pool. The DSN of the database must be set in the same environment variable `SDB_DSN` used by the server for setting the database connection parameters.
 
 Any test function using the `db` fixture must be an async function and must be marked with `pytest.mark.asyncio`. This implies that you cannot use Starlette's test client (as, for example, provided by the `client` fixture) together with the `db` fixture.
 

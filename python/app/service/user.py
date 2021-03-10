@@ -39,13 +39,14 @@ SELECT COUNT(*) AS c
 FROM PiptUserSetting pus
 JOIN PiptSetting ps ON pus.PiptSetting_Id = ps.PiptSetting_Id
 JOIN PiptUser pu ON pus.PiptUser_Id = pu.PiptUser_Id
-WHERE pu.Username = %(username)s AND ps.PiptSetting_Name='RightAdmin' AND pus.Value >= 2;
+WHERE pu.Username = %(username)s
+      AND ps.PiptSetting_Name='RightAdmin'
+      AND pus.Value >= 2;
     """
     with db.acquire() as conn:
         with conn.cursor() as cur:
             cur.execute(sql, {"username": user.username})
             (r,) = cur.fetchone()
-            print(r)
             return int(r) > 0
 
 

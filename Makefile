@@ -69,10 +69,10 @@ prettier-staged: ## format staged JavaScript files
 	cd e2e; npm run pretty-quick:staged
 
 pytest: ## run tests quickly with the default Python
-	cd python; pytest
+	cd python; MODE=test poetry run pytest
 
 start: ## start the development server
-	cd python; uvicorn --reload --port 8001 app.main:app
+	cd python; MODE=production poetry run uvicorn --reload --port 8001 app.main:app
 
 test: ## run various tests (but no end-to-end tests)
 	cd python; poetry run mypy --config-file mypy.ini .
@@ -80,7 +80,7 @@ test: ## run various tests (but no end-to-end tests)
 	cd python; poetry run flake8
 	cd python; poetry run isort --check .
 	cd python; poetry run black --check .
-	cd python; poetry run pytest
+	cd python; MODE=test poetry run pytest
 	cd e2e; npx prettier --check cypress
 	cd e2e; npm run cypress:run
 
