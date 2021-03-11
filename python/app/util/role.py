@@ -40,7 +40,7 @@ class Investigator(Role):
         self.db = db
 
     async def is_assigned_to(self, user: User) -> bool:
-        return await user_service.is_investigator(user, self.proposal_code)
+        return await user_service.is_investigator(user, self.proposal_code, self.db)
 
 
 class MaskCutter(Role):
@@ -52,7 +52,7 @@ class MaskCutter(Role):
         self.db = db
 
     async def is_assigned_to(self, user: User) -> bool:
-        return await user_service.is_mask_cutter(user)
+        return await user_service.is_mask_cutter(user, self.db)
 
 
 class PartnerTacChair(Role):
@@ -65,7 +65,7 @@ class PartnerTacChair(Role):
         self.db = db
 
     async def is_assigned_to(self, user: User) -> bool:
-        return await user_service.is_partner_tac_chair(user, self.partner_code)
+        return await user_service.is_partner_tac_chair(user, self.partner_code, self.db)
 
 
 class PartnerTacMember(Role):
@@ -78,7 +78,9 @@ class PartnerTacMember(Role):
         self.db = db
 
     async def is_assigned_to(self, user: User) -> bool:
-        return await user_service.is_partner_tac_member(user, self.partner_code)
+        return await user_service.is_partner_tac_member(
+            user, self.partner_code, self.db
+        )
 
 
 class PrincipalContact(Role):
@@ -91,7 +93,9 @@ class PrincipalContact(Role):
         self.db = db
 
     async def is_assigned_to(self, user: User) -> bool:
-        return await user_service.is_principal_contact(user, self.proposal_code)
+        return await user_service.is_principal_contact(
+            user, self.proposal_code, self.db
+        )
 
 
 class PrincipalInvestigator(Role):
@@ -104,7 +108,9 @@ class PrincipalInvestigator(Role):
         self.db = db
 
     async def is_assigned_to(self, user: User) -> bool:
-        return await user_service.is_principal_investigator(user, self.proposal_code)
+        return await user_service.is_principal_investigator(
+            user, self.proposal_code, self.db
+        )
 
 
 class ProposalTacChair(Role):
@@ -117,7 +123,9 @@ class ProposalTacChair(Role):
         self.db = db
 
     async def is_assigned_to(self, user: User) -> bool:
-        return await user_service.is_proposal_tac_chair(user, self.proposal_code)
+        return await user_service.is_proposal_tac_chair(
+            user, self.proposal_code, self.db
+        )
 
 
 class ProposalTacMember(Role):
@@ -130,7 +138,9 @@ class ProposalTacMember(Role):
         self.db = db
 
     async def is_assigned_to(self, user: User) -> bool:
-        return await user_service.is_proposal_tac_member(user, self.proposal_code)
+        return await user_service.is_proposal_tac_member(
+            user, self.proposal_code, self.db
+        )
 
 
 class SaltAstronomer(Role):
@@ -142,7 +152,7 @@ class SaltAstronomer(Role):
         self.db = db
 
     async def is_assigned_to(self, user: User) -> bool:
-        return await user_service.is_salt_astronomer(user)
+        return await user_service.is_salt_astronomer(user, self.db)
 
 
 class SaltEngineer(Role):
@@ -154,7 +164,7 @@ class SaltEngineer(Role):
         self.db = db
 
     async def is_assigned_to(self, user: User) -> bool:
-        return await user_service.is_salt_engineer(user)
+        return await user_service.is_salt_engineer(user, self.db)
 
 
 class SaltOperator(Role):
@@ -166,4 +176,4 @@ class SaltOperator(Role):
         self.db = db
 
     async def is_assigned_to(self, user: User) -> bool:
-        return await user_service.is_salt_operator(user)
+        return await user_service.is_salt_operator(user, self.db)

@@ -62,8 +62,8 @@ The following roles are defined.
 | PartnerTacChair       | Chair of the TAC for a partner.               | Partner code (such as `IUCAA`). |
 | PrincipalContact      | Principal Contact for a proposal.             | Proposal code.                  |
 | PrincipalInvestigator | Principal Investigator for a proposal.        | Proposal code.                  |
-| ProposalTacChair      | Chair of a TAC for a proposal.                | Proposal code.                  |
-| ProposalTacMember     | Member of a TAC for a proposal.               | Proposal code.                  |
+| ProposalTacChair      | Chair of a TAC from which a proposal requests time.                | Proposal code.                  |
+| ProposalTacMember     | Member of a TAC from which a proposal requests time.               | Proposal code.                  |
 | SaltAstronomer        | SALT Astronomer.                              |
 | SaltEngineer          | Member of the SALT Technical Operations Team. |
 | SaltOperator          | SALT Operator.                                |
