@@ -1,5 +1,5 @@
+import aiofiles
 import os
-import zipfile
 from typing import List
 
 
@@ -9,16 +9,13 @@ def get_last_submission(proposal_code: str) -> List[str]:
     )[-2]
 
 
-def get_block_html(proposal_code: str, block_code: str) -> str:
-    last_submission = get_last_submission(proposal_code)
-    archive = zipfile.ZipFile(f"{last_submission}/{proposal_code}.zip", 'r')
-    proposal_xml = archive.open('Proposal.xml')
-    return f"""
+async def get_block_html(proposal_code: str, block_code: str) -> str:
+    last_submission = f"""{os.getenv("BASE_DIR")}/{proposal_code}/Included/Block-{block_code}-2018-1.xml"""
+    with aiofiles.open(last_submission, mode='r') as f:
+        contents = await f.read()
+        return f"""
 <pre>
     ProposalCode: {proposal_code}    Block: {block_code}
     ____________________________________________________________
-    
-    {proposal_xml.read()}
-    
-</pre>
-"""
+    {contents}
+</pre>"""
