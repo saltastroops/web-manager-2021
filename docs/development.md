@@ -39,9 +39,9 @@ poetry install
 
 ## Settings
 
-The Web Manager can be run in test and production mode. This mode is set by an environment variable `MODE`, which must have the (case-insensitive) value "test" or "production".
+All settings for the Web Manager must be provided as environment variables or in a file. By default that file is the file `.env` in the server's root folder (i.e. in the `python` folder). However, you can choose another file by setting the environment variable `DOTENV_FILE`. _Remember that a file defining environment variables must **never** be put under version control._
 
-All settings for the Web Manager must be provided as environment variables, or in a file at the server's root level (i.e. in the `python` folder). For production mode that file must be called `.env`, for test mode it must be called `.env.test`. _Remember that the `.env` and `.env.test` file must **never** be put under version control._
+The unit tests always use the file `.env.test` in the server's root folder, and you cannot change this file.
 
 You can find the list of settings in the module `app.settings`; each property of the `Settings` class corresponds to an environment variable. The names aren't case-sensitive; so, for example, the property `secret_key` can be defined in an environment variable `SECRET_KEY`. Talking of secret keys, any secret key should be generated with `openssl`.
 
