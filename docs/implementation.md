@@ -34,7 +34,7 @@ For example, to check whether a user may view a proposal, we can do something li
 ```python
 from app.util.permission import ViewProposal
 
-view_proposal = ViewProposal("2020-1-SCI-019")
+view_proposal = ViewProposal("2020-1-SCI-019", db)
 may_view_proposal = view_proposal.is_permitted_for(user)
 ```
 
@@ -44,11 +44,21 @@ While this works, it's not convenient from a testing perspective, as you'd end u
 from app.util.permission import ViewProposal
 from app.util.role import Investigator
 
-investigator = Investigator("2020-1-SCI-019")
+investigator = Investigator("2020-1-SCI-019", db)
 is_investigator = user.has_role_of(investigator)
 
-view_proposal = ViewProposal("2020-1-SCI-019")
+view_proposal = ViewProposal("2020-1-SCI-019", db)
 may_view_proposal = user.is_permitted_to(view_proposal)
+```
+
+In most cases more than one rule needs to be checked and the user is required to have at least one of a list of permissions. The `User` class therefore also has a method `has_any_role_of`. This method should be used rather than calling `has_role_of` multiple times.
+
+```python
+from app.util.role import Administrator, Investigator
+
+administrator = Administrator(db)
+investigator = Investigator("2020-1-SCI-019", db)
+is_admin_or_investigator = user.has_any_role_of([administrator, investigator])
 ```
 
 The following roles are defined.

@@ -242,3 +242,104 @@ You can then use your custom filter as you would any regular Jinja2 filter.
 ```html
 <h1>{% raw %}{{ "Stay positive" | keepsmiling }}{% endraw %}</h1>
 ```
+
+## Roles and permissions
+
+Authorization should be done with `Permission` instances, which in turn use `Role` instances.
+
+### Roles
+
+The `app.util.role` module provides an abstract  base class `Role`, which all user role classes should extend. The extending class should not make any database query itself, but rather call a function from the module `app.service.user`. As an example, here is the implementation of the `Investigator` role.
+
+```python
+from aiomysql import Pool
+from app.service import user as user_service
+from app.util.role import Role
+
+class Investigator(Role):
+    """
+    The role of being an investigator on a proposal.
+    """
+
+    def __init__(self, proposal_code: str, db: Pool):
+        self.proposal_code = proposal_code
+        self.db = db
+
+    async def is_assigned_to(self, user: User) -> bool:
+        return await user_service.is_investigator(user, self.proposal_code, self.db)
+```
+
+Once you have a `Role` instance, you can use its `is_assigned_to` method to check whether a user has that role. Alternatively, you can use the user's `has_role_of` method. As a guideline, the `has_role_of` method should be preferred.
+
+```python
+investigator = Investigator("2020-2-SCI-017", db)
+
+is_investigator = investigator.is_assigned_to(user)
+
+# alternatively (and preferred):
+is_investigator = user.has_role_of(investigator)
+```
+
+If you need to check whether a user has any of a list of multiple roles, you should call the user's `has_any_role_of` method.
+
+```python
+salt_astronomer = SaltAstronomer(db)
+salt_operator = SaltOperator(db)
+is_salt_astronmomer_or_operator = user.has_any_role_of([salt_astronomer, salt_operator])
+```
+
+It might be tempting to user these methods for directly checking authorization. However. you shouldn't. Authorization should always be checked with the user's `is_permitted_to` method, as discussed in the next section.
+
+### Permissions
+
+The `app.util.permission` module provides an abstract base class `Permission`, which all permission classes should extend. All permissions should be defined in terms of user roles. As an example, here is the implementation of the `ViewProposal`class.
+
+```python
+from aiomysql import Pool
+
+from app.models.pydantic import User
+from app.util import role
+from app.util.permission import Permission
+
+class ViewProposal(Permission):
+    """
+    Permission to view a proposal.
+
+    A user may view a proposal if at least one of the following is true.
+
+    - The user is an investigator on the proposal.
+    - The user is a SALT Astronomer.
+    - The user is a SALT Operator.
+    - The user is a SALT Engineer.
+    - The user is a TAC member for a partner from which the proposal has requested time.
+    - The user is an administrator.
+    """
+
+    def __init__(self, proposal_code: str, db: Pool):
+        self.proposal_code = proposal_code
+        self.db = db
+
+    async def is_permitted_for(self, user: User) -> bool:
+        """Check whether a user has the permission."""
+
+        roles = [role.Investigator(self.proposal_code, self.db),
+                 role.SaltAstronomer(self.db),
+                 role.SaltOperator(self.db),
+                 role.SaltEngineer(self.db),
+                 role.ProposalTacMember(self.proposal_code, self.db),
+                 role.Administrator(self.db)
+                 ]
+
+        return await user.has_any_role_of(roles)
+```
+
+Once you have a `Permission` instance, you can use its `is_permitted_for` method to check whether a user has the permission. Alternatively, you can call the user's `is_permitted_to` method. As a guideline, the `is_permitted_to` method should be preferred.
+
+```python
+view_proposal = ViewProposal("2020-2-SCI-034", db)
+
+may_view_proposal = view_proposal.is_permitted_for(user)
+
+# alternatively (and preferred):
+may_view_proposal = user.is_permitted_to(view_proposal)
+```
