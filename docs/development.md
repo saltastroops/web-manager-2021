@@ -91,6 +91,44 @@ The Makefile provides various rules for formatting and testing.
 - Running formatting and other tests: `make test`
 - Running tox: `make tox`
 
+## Using a test database
+
+For development purposes the easiest choice is to work with a copy of the SALT Science Database (SDB). But there are cases where just using a copy is not ideal, and a database without sensitive information is called for. Notable examples are unit tests checking against database content and screen shots for the documentation.
+
+To facilitate the creation of such a test database there is a command line tool `createtestdb` which clones a source database (which should be a copy of the SDB) and then replaces sensitive information in the new database with fake data.
+
+This tool is installed automatically when you run `poetry install`. It takes the following options.
+
+Command line option | Description | Required?
+--- | --- | ---
+--help | Output a help message | No
+--source-db-host | Host of the source database | Yes
+--source-db-name | Name of the source database | Yes
+--source-db-password | Password of the source database user account | No
+--source-db-user | Username of the source database user account | Yes
+--test-db-host | Host of the test database | Yes
+--test-db-name | Name of the test database | Yes
+--test-db-password | Password of the test database user account | No
+--test-db-user | Username of the test database user account | Yes
+
+While the password options are not required, you will be prompted for the passwords if you don't include them.
+
+When running the `createtestdb` command, you might get an error stating that the definer 'abcd'@'some_host' does not exist (obviously with a username and host other than 'abcd' and 'some_host'). In this case, you should create the missing user in MySQL and grant the user full privileges.
+
+```mysql
+CREATE USER 'abcd'@'some_host' IDENTIFIED BY 'some_strong_password';
+GRANT ALL ON *.* TO 'abcd'@'some_host';
+```
+
+The following sensitive information is replaced.
+
+* The username in the `PiptUser` table.
+* The first name, surname, email address and phone number in the `Investigator` table.
+* The right ascension and declination in the `TargetCoordinates` table.
+
+!!! warning
+    While these details should be the most sensitive ones, this does not mean that the resulting database should be considered public. Indeed, you should consider it as confidential as the SDB, and you should only share it with people with whom you would be comfortable sharing the SDB itself.
+
 ## Making use of the git pre-commit hook
 
 As forgetting to format code or run tests is human, but having to deal with failing GitHub actions is not fun, it is advisable to use git hooks to ensure whatever should be in place is in place before pushing your changes.
@@ -145,7 +183,7 @@ Any test function using the `db` fixture must be an async function and must be m
 
 The end-to-end tests require the server to run, but the Makefile commands for running the tests (`cypress` and `end2end`) do not launch it. So you have to start the server yourself. The server must be listening on port 8001.
 
-In case you need to skip the end-to-end tests when running tox, you can set the environment variable SKIP_E2E to any non-empty value. This is done for the Github Action workflows.
+In case you need to skip the end-to-end tests when running tox, you can set the environment variable `SKIP_E2E` to any non-empty value. This is done for the Github Action workflows.
 
 ## Documentation
 
