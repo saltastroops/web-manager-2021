@@ -12,6 +12,8 @@ import pydantic
 from aiomysql import connect
 from faker import Faker
 
+from tests.update_permissions import create_known_users
+
 fake = Faker()
 Faker.seed(4321)
 random.seed(4321)
@@ -359,6 +361,7 @@ async def create_test_database(source_db: Database, test_db: Database) -> None:
         # ... and get rid of the sensitive information
         try:
             await replace_sensitive_info(test_db_connection)
+            await create_known_users(test_db_connection)
         except Exception as e:
             await test_db_connection.rollback()
             raise e
