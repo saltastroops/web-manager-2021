@@ -67,7 +67,7 @@ async def test_user_has_any_role_of(
         username="someone",
     )
 
-    assert await user.has_any_role_of(roles) == expected_has_any_role
+    assert await user.has_any_role_of(*roles) == expected_has_any_role
 
 
 @pytest.mark.asyncio

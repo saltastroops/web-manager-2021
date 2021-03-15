@@ -10,7 +10,7 @@ from tests.markers import nodatabase
 
 @pytest.mark.asyncio
 @nodatabase
-async def test_database_pool_can_be_connected_called_and_closed():
+async def test_database_pool_can_be_connected_called_and_closed() -> None:
     """A DatabasePool instance can be created, connected, called and closed."""
     dsn = os.getenv("SDB_DSN")
     if not dsn:
@@ -31,7 +31,7 @@ async def test_database_pool_can_be_connected_called_and_closed():
         await database_pool.close()
 
 
-def test_database_pool_connect_must_called_first():
+def test_database_pool_connect_must_be_called_first() -> None:
     """
     For a DatabasePool instance the connect method must be called before the instance
     can be called.

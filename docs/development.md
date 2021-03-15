@@ -285,7 +285,7 @@ If you need to check whether a user has any of a list of multiple roles, you sho
 ```python
 salt_astronomer = SaltAstronomer(db)
 salt_operator = SaltOperator(db)
-is_salt_astronmomer_or_operator = user.has_any_role_of([salt_astronomer, salt_operator])
+is_salt_astronmomer_or_operator = user.has_any_role_of(salt_astronomer, salt_operator)
 ```
 
 It might be tempting to user these methods for directly checking authorization. However. you shouldn't. Authorization should always be checked with the user's `is_permitted_to` method, as discussed in the next section.

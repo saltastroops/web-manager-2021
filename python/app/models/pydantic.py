@@ -1,6 +1,6 @@
 import asyncio
 from asyncio import Task
-from typing import TYPE_CHECKING, List, cast
+from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:  # avoid circular import issues
     from app.util.permission import Permission  # pragma: no cover
@@ -32,7 +32,7 @@ class User(BaseModel):
         """
         return await role.is_assigned_to(self)
 
-    async def has_any_role_of(self, roles: List["Role"]) -> bool:
+    async def has_any_role_of(self, *roles: "Role") -> bool:
         """
         Check whether the user has any of a list of roles.
 

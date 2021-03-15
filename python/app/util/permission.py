@@ -52,4 +52,4 @@ class ViewProposal(Permission):
             role.Administrator(self.db),
         ]
 
-        return await user.has_any_role_of(roles)
+        return await user.has_any_role_of(*roles)
