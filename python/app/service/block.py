@@ -44,7 +44,6 @@ def remove_namespaces(data: Dict[str, Any]) -> OrderedDict[str, Any]:
 
 
 def get_block_file(proposal_code: str, block_code: str, proposals_base_dir: str) -> str:
-    print(f"{proposals_base_dir}/{proposal_code}")
     block = glob(f"{proposals_base_dir}/{proposal_code}/Included/Block-{block_code}-*")
     if len(block) < 1:
         raise ValueError(f"Block: {block_code } not found")
