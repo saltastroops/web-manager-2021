@@ -7,11 +7,11 @@ from app.models.pydantic import User, UserInDB
 async def get_user(username: str, db: Pool) -> UserInDB:
     sql = """
 SELECT
-    Username,
-    Password,
+    Email,
     FirstName,
     Surname,
-    Email
+    Password,
+    Username
 FROM PiptUser AS pu
     JOIN Investigator AS i ON (pu.Investigator_Id=i.Investigator_Id)
 WHERE Username=%(username)s
@@ -24,11 +24,11 @@ WHERE Username=%(username)s
                 raise ValueError(f"There exists no user for the username {username}.")
 
     return UserInDB(
-        email=r.email,
-        family_name=r.family_name,
-        given_name=r.given_name,
-        hashed_password=r.hashed_password,
-        username=r.username,
+        email=r[0],
+        family_name=r[1],
+        given_name=r[2],
+        hashed_password=r[3],
+        username=r[4],
     )
 
 

@@ -12,6 +12,7 @@ from starlette.templating import Jinja2Templates
 from app.dependencies import get_current_user, get_db, get_settings
 from app.jinja2.filters import autoversion
 from app.models.pydantic import User
+from app.service import block as block_service
 from app.settings import Settings
 from app.util import auth
 
@@ -80,15 +81,18 @@ def proposals(user: User = Depends(get_current_user)) -> Response:
 
 
 @router.get("/proposals/{proposal_code}", response_class=HTMLResponse)
-def proposal(
-    request: Request, proposal_code: str, user: User = Depends(get_current_user)
+async def proposal(
+    request: Request,
+    proposal_code: str,
+    user: User = Depends(get_current_user),
+    db: Pool = Depends(get_db),
 ) -> Response:
+    block_codes = await block_service.get_block_codes(proposal_code, db)
     return templates.TemplateResponse(
         "proposal.html",
         {
             "request": request,
             "proposal_code": proposal_code,
-            "initial_block": "<h2>This is the initial block.</h2>",
-            "block_codes": ["abcd9876", "pdgh", "356hcdfth", "kh895gght"],
+            "block_codes": block_codes,
         },
     )

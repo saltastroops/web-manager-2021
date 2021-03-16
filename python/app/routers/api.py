@@ -52,7 +52,12 @@ async def login_for_access_token(
 
 @router.get("/api/proposals/{proposal_code}/blocks/{block_code}")
 async def get_block_html(
-    proposal_code: str, block_code: str, user: User = Depends(get_current_user)
+    proposal_code: str,
+    block_code: str,
+    settings: Settings = Depends(get_settings),
+    user: User = Depends(get_current_user),
 ) -> Dict[str, str]:
-    block_content = block.get_block_html(proposal_code, block_code)
+    block_content = await block.get_block_html(
+        proposal_code, block_code, settings.proposals_base_dir
+    )
     return {"html": block_content}

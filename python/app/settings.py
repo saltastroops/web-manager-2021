@@ -32,6 +32,9 @@ class Settings(BaseSettings):
     root level of the project). The environment variable names may be in uppercase.
     """
 
+    # Base directory for proposal content
+    proposals_base_dir: str
+
     # DSN for the SALT Science Database
     sdb_dsn: str
 
