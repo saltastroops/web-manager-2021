@@ -1,8 +1,46 @@
-from glob import glob
-from typing import List
+import json
 
 import aiofiles
+import collections
+import xmltodict
+import re
 from aiomysql import Pool
+from glob import glob
+from typing import Any, List, Dict, OrderedDict
+
+
+def updated_key(key: str) -> str:
+    if ":" in key:
+        ns, tag = key.split(":", 1)
+        return tag
+    else:
+        return key
+
+
+def updated_value(value: Any) -> Any:
+    if isinstance(value, dict):
+        return remove_namespaces(value)
+    elif isinstance(value, list) or isinstance(value, tuple):
+        return [updated_value(item) for item in value]
+    else:
+        if not value:
+            return value
+        if re.match(r"^http", str(value)):
+            return "Pass this value."
+        return value
+
+
+def remove_namespaces(data: Dict[str, Any]) -> OrderedDict[str, Any]:
+    updated = collections.OrderedDict()
+    for key, value in data.items():
+        new_key = updated_key(key)
+        new_value = updated_value(value)
+
+        if re.match(r"^\@", str(new_key)):
+            new_key = new_key[1:]
+        if not (new_value == "Pass this value."):
+            updated[new_key] = new_value
+    return updated
 
 
 def get_block_file(proposal_code: str, block_code: str, proposals_base_dir: str) -> str:
@@ -18,10 +56,13 @@ async def get_block_html(
 ) -> str:
     block_xml = get_block_file(proposal_code, block_code, proposals_base_dir)
     async with aiofiles.open(block_xml, mode="r") as f:
-        contents = await f.read()
+        content = await f.read()
+        block_dict = xmltodict.parse(content)
+        block_without_namespaces = remove_namespaces(block_dict)["Block"]
+        block_json = json.dumps(block_without_namespaces, indent=2)
         return f"""
 <pre>
-    {contents}
+    {block_json}
 </pre>"""
 
 
