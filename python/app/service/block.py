@@ -1,16 +1,18 @@
 """Block service."""
+import collections
 import pathlib
+import re
+from typing import Any, List, OrderedDict
 
 import aiofiles
-import collections
 import xmltodict
-import re
 from aiomysql import Pool
-from typing import Any, List, OrderedDict
+
+from app.models.pydantic import Semester
 
 
 async def get_block(
-        proposal_code: str, block_code: str, proposals_base_dir: str
+    proposal_code: str, block_code: str, semester: Semester, proposals_base_dir: str
 ) -> OrderedDict[str, Any]:
     """
     Return a block as a JSON object (in form of a dictionary).
@@ -23,18 +25,22 @@ async def get_block(
 
     XML attributes are included, and their name is prefixed with an '@'.
     """
-    block_json = await _block_json_from_xml_file(proposal_code, block_code, proposals_base_dir)
+    block_json = await _block_json_from_xml_file(
+        proposal_code, block_code, semester, proposals_base_dir
+    )
     return block_json
 
 
-async def _block_json_from_xml_file(proposal_code: str, block_code: str, proposals_base_dir: str) -> OrderedDict[str, Any]:
+async def _block_json_from_xml_file(
+    proposal_code: str, block_code: str, semester: Semester, proposals_base_dir: str
+) -> OrderedDict[str, Any]:
     """
     Get the JSON object (as a dictionary) for a block from the XML file.
 
     The JSON object only contains the (cleaned) XML content; use the get_block method to
     get the block content with additional information.
     """
-    block_xml = get_block_file(proposal_code, block_code, proposals_base_dir)
+    block_xml = _block_filepath(proposal_code, block_code, semester, proposals_base_dir)
     async with aiofiles.open(block_xml, mode="r") as f:
         content = await f.read()
         block_dict = xmltodict.parse(content)
@@ -105,20 +111,26 @@ def _clean_block_dict(data: OrderedDict[str, Any]) -> OrderedDict[str, Any]:
     return updated
 
 
-def get_block_file(proposal_code: str, block_code: str, proposals_base_dir: str) -> pathlib.Path:
+def _block_filepath(
+    proposal_code: str, block_code: str, semester: Semester, proposals_base_dir: str
+) -> pathlib.Path:
     """
     Return the path of the XML file generated during submission for a block.
     """
     base_dir = pathlib.Path(proposals_base_dir)
-    block_files = list(base_dir.glob(f"{proposal_code}/Included/Block-{block_code}-*"))
+    path = (
+        f"{proposal_code}/Included/Block-{block_code}-{semester.year}-"
+        f"{semester.semester}.xml"
+    )
+    block_files = list(base_dir.glob(path))
     if len(block_files) == 0:
-        raise ValueError(f"Block not found: {block_code}")
+        raise FileNotFoundError(f"Block file not found for block: {block_code}")
     return block_files[0]
 
 
-
-
-async def get_block_codes(proposal_code: str, db: Pool) -> List[str]:
+async def get_block_codes(
+    proposal_code: str, semester: Semester, db: Pool
+) -> List[str]:
     """
     WARNING: This is a temporary function! It will disappear soon!
     """
@@ -126,12 +138,21 @@ async def get_block_codes(proposal_code: str, db: Pool) -> List[str]:
 SELECT BlockCode
 FROM BlockCode bc
 JOIN Block b ON bc.BlockCode_Id = b.BlockCode_Id
+JOIN Proposal p ON b.Proposal_Id = p.Proposal_Id
+JOIN Semester s ON p.Semester_Id = s.Semester_Id
 JOIN ProposalCode pc ON b.ProposalCode_Id = pc.ProposalCode_Id
-WHERE pc.Proposal_Code=%(proposal_code)s
+WHERE pc.Proposal_Code=%(proposal_code)s AND s.Year=%(year)s AND s.Semester=%(semester)s
 ORDER BY b.Block_Id
 """
     async with db.acquire() as conn:
         async with conn.cursor() as cur:
-            await cur.execute(sql, {"proposal_code": proposal_code})
+            await cur.execute(
+                sql,
+                {
+                    "proposal_code": proposal_code,
+                    "year": semester.year,
+                    "semester": semester.semester,
+                },
+            )
             rs = await cur.fetchall()
             return [r[0] for r in rs]

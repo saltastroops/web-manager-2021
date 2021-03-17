@@ -1,14 +1,15 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
 
 import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from aiomysql import Pool
 from fastapi import HTTPException
+from freezegun.api import FrozenDateTimeFactory
 from jose import jwt
 
-from app.dependencies import get_current_user, get_settings
-from app.models.pydantic import UserInDB
+from app.dependencies import get_current_user, get_semester, get_settings
+from app.models.pydantic import Semester, UserInDB
 from app.service import user as user_service
 from app.settings import Settings
 
@@ -106,3 +107,50 @@ async def test_get_current_user_returns_user(monkeypatch: MonkeyPatch) -> None:
     user = await get_current_user(Settings(secret_key=secret_key), token)
     assert user.username == "johndoe"
     assert not hasattr(user, "hashed_password")
+
+
+def test_get_semester_returns_input() -> None:
+    """get_semester returns the semester for the year and semester input."""
+    assert get_semester(year=2019, semester=1) == Semester(year=2019, semester=1)
+    assert get_semester(year=2020, semester=2) == Semester(year=2020, semester=2)
+
+
+def test_get_semester_year_requires_semester() -> None:
+    """If a year is passed to get_semester, a semester must be passed as well."""
+    with pytest.raises(ValueError):
+        get_semester(year=2020)
+
+
+def test_get_semester_semester_requires_year() -> None:
+    """If a semester is passed to get_semester, a year must be passed as well."""
+    with pytest.raises(ValueError):
+        get_semester(semester=2)
+
+
+@pytest.mark.parametrize(
+    "now,expected_semester",
+    [
+        (
+            datetime(2021, 5, 1, 11, 59, 59, 0, tzinfo=timezone.utc),
+            Semester(year=2020, semester=2),
+        ),
+        (
+            datetime(2021, 5, 1, 12, 0, 0, 1, tzinfo=timezone.utc),
+            Semester(year=2021, semester=1),
+        ),
+        (
+            datetime(2021, 11, 1, 11, 59, 59, 0, tzinfo=timezone.utc),
+            Semester(year=2021, semester=1),
+        ),
+        (
+            datetime(2021, 11, 1, 12, 0, 0, 1, tzinfo=timezone.utc),
+            Semester(year=2021, semester=2),
+        ),
+    ],
+)
+def test_get_semester_returns_correct_default_value(
+    now: datetime, expected_semester: Semester, freezer: FrozenDateTimeFactory
+) -> None:
+    """get_semester returns the current semester as default value."""
+    freezer.move_to(now)
+    assert get_semester() == expected_semester

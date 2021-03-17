@@ -1,0 +1,281 @@
+
+<ns1:Block xmlns:ns1="http://www.salt.ac.za/PIPT/Proposal/Phase2/4.8" id="Block-10">
+    <ns1:Name>Some Target P0</ns1:Name>
+    <ns1:BlockCode>fd6b10fe-6400-4676-ad6d-6283ac598295</ns1:BlockCode>
+    <ns1:BlockSemester>
+        <ns1:Year>2018</ns1:Year>
+        <ns1:Semester>2</ns1:Semester>
+        <ns1:Visits>1</ns1:Visits>
+        <ns1:Wait>
+            <ns1:Value>1.0</ns1:Value>
+            <ns1:Units>days</ns1:Units>
+        </ns1:Wait>
+        <ns1:Comments>P0 used to pick up a low-visibility needed phase.</ns1:Comments>
+        <ns1:Priority>0</ns1:Priority>
+        <ns1:Ranking>High</ns1:Ranking>
+        <ns1:InPool>
+            <ns1:PoolCode>9e840e44-3964-4575-aa3e-1c3ff5409375</ns1:PoolCode>
+        </ns1:InPool>
+    </ns1:BlockSemester>
+    <ns1:BlockSemester>
+        <ns1:Year>2019</ns1:Year>
+        <ns1:Semester>1</ns1:Semester>
+        <ns1:Visits>15</ns1:Visits>
+        <ns1:Comments>P0 used to pick up a low-visibility needed phase.</ns1:Comments>
+        <ns1:Priority>0</ns1:Priority>
+        <ns1:Ranking>High</ns1:Ranking>
+        <ns1:InPool>
+            <ns1:PoolCode>9e840e44-3964-4575-aa3e-1c3ff5409375</ns1:PoolCode>
+        </ns1:InPool>
+    </ns1:BlockSemester>
+    <ns1:BlockSemester>
+        <ns1:Year>2019</ns1:Year>
+        <ns1:Semester>2</ns1:Semester>
+        <ns1:Visits>20</ns1:Visits>
+        <ns1:Comments>2400 secs + 600 sec acquisition. P0 used to pick up a low-visibility needed phase.</ns1:Comments>
+        <ns1:Priority>0</ns1:Priority>
+        <ns1:Ranking>High</ns1:Ranking>
+        <ns1:InPool>
+            <ns1:PoolCode>9e840e44-3964-4575-aa3e-1c3ff5409375</ns1:PoolCode>
+        </ns1:InPool>
+    </ns1:BlockSemester>
+    <ns1:BlockSemester>
+        <ns1:Year>2020</ns1:Year>
+        <ns1:Semester>1</ns1:Semester>
+        <ns1:Visits>19</ns1:Visits>
+        <ns1:Comments>2400 secs + 600 sec acquisition. P0 used to pick up a low-visibility needed phase.</ns1:Comments>
+        <ns1:Priority>0</ns1:Priority>
+        <ns1:Ranking>High</ns1:Ranking>
+        <ns1:InPool>
+            <ns1:PoolCode>9e840e44-3964-4575-aa3e-1c3ff5409375</ns1:PoolCode>
+        </ns1:InPool>
+    </ns1:BlockSemester>
+    <ns1:BlockType>Science</ns1:BlockType>
+    <ns1:Charged>true</ns1:Charged>
+    <ns1:Transparency>Thin cloud</ns1:Transparency>
+    <ns1:MaximumLunarPhase>
+        <ns2:Value xmlns:ns2="http://www.salt.ac.za/PIPT/Proposal/Shared/2.7">100.0</ns2:Value>
+        <ns2:Units xmlns:ns2="http://www.salt.ac.za/PIPT/Proposal/Shared/2.7">%</ns2:Units>
+    </ns1:MaximumLunarPhase>
+    <ns1:MinimumLunarAngularDistance>
+        <ns1:Value>30.0</ns1:Value>
+        <ns1:Units>degrees</ns1:Units>
+    </ns1:MinimumLunarAngularDistance>
+    <ns1:SeeingConstraint>
+        <ns1:Maximum>
+            <ns2:Value xmlns:ns2="http://www.salt.ac.za/PIPT/Proposal/Shared/2.7">3.0</ns2:Value>
+            <ns2:Units xmlns:ns2="http://www.salt.ac.za/PIPT/Proposal/Shared/2.7">arcseconds</ns2:Units>
+        </ns1:Maximum>
+        <ns1:Minimum>
+            <ns2:Value xmlns:ns2="http://www.salt.ac.za/PIPT/Proposal/Shared/2.7">0.1</ns2:Value>
+            <ns2:Units xmlns:ns2="http://www.salt.ac.za/PIPT/Proposal/Shared/2.7">arcseconds</ns2:Units>
+        </ns1:Minimum>
+    </ns1:SeeingConstraint>
+    <ns1:MaxVisits>20</ns1:MaxVisits>
+    <ns1:SubBlock useWithReferenceName="SubBlock" useWithReferenceNamespaceURI="http://www.salt.ac.za/PIPT/Proposal/Phase2/4.8">
+        <ns1:Name>[SubBlock]</ns1:Name>
+        <ns1:Iterations>1</ns1:Iterations>
+        <ns1:SubSubBlock useWithReferenceName="SubSubBlock" useWithReferenceNamespaceURI="http://www.salt.ac.za/PIPT/Proposal/Phase2/4.8">
+            <ns1:Name>[SubSubBlock]</ns1:Name>
+            <ns1:Iterations>1</ns1:Iterations>
+            <ns1:Pointing useWithReferenceName="Pointing" useWithReferenceNamespaceURI="http://www.salt.ac.za/PIPT/Proposal/Phase2/4.8">
+                <ns1:Name>[Pointing]</ns1:Name>
+                <ns1:Observation useWithReferenceName="Observation" useWithReferenceNamespaceURI="http://www.salt.ac.za/PIPT/Proposal/Phase2/4.8">
+                    <ns1:Name>Some Target</ns1:Name>
+                    <ns1:Acquisition useWithReferenceName="Acquisition" useWithReferenceNamespaceURI="http://www.salt.ac.za/PIPT/Proposal/Phase2/4.8">
+                        <ns1:Name>Some Target</ns1:Name>
+                        <ns2:Target xmlns:ns2="http://www.salt.ac.za/PIPT/Proposal/Shared/2.7" useWithReferenceName="Target" useWithReferenceNamespaceURI="http://www.salt.ac.za/PIPT/Proposal/Phase2/4.8">
+                            <ns2:Name>Some Target</ns2:Name>
+                            <ns2:TargetCode>172529be-de04-42c7-96ed-e3d84f3d7cd2</ns2:TargetCode>
+                            <ns2:TargetType>WR*</ns2:TargetType>
+                            <ns2:Coordinates>
+                                <ns3:RightAscension xmlns:ns3="http://www.salt.ac.za/PIPT/Shared/1.4">
+                                    <ns3:Hours>15</ns3:Hours>
+                                    <ns3:Minutes>23</ns3:Minutes>
+                                    <ns3:Seconds>16.954</ns3:Seconds>
+                                </ns3:RightAscension>
+                                <ns3:Declination xmlns:ns3="http://www.salt.ac.za/PIPT/Shared/1.4">
+                                    <ns3:Sign>-</ns3:Sign>
+                                    <ns3:Degrees>23</ns3:Degrees>
+                                    <ns3:Arcminutes>57</ns3:Arcminutes>
+                                    <ns3:Arcseconds>38.7</ns3:Arcseconds>
+                                </ns3:Declination>
+                                <ns3:ProperMotionAndEpoch xmlns:ns3="http://www.salt.ac.za/PIPT/Shared/1.4">
+                                    <ns3:RightAscensionDot>
+                                        <ns3:Value>-0.0024</ns3:Value>
+                                        <ns3:Units>arcseconds/year</ns3:Units>
+                                    </ns3:RightAscensionDot>
+                                    <ns3:DeclinationDot>
+                                        <ns3:Value>0.0055</ns3:Value>
+                                        <ns3:Units>arcseconds/year</ns3:Units>
+                                    </ns3:DeclinationDot>
+                                    <ns3:Epoch>2000-01-01T00:00:00.791Z</ns3:Epoch>
+                                </ns3:ProperMotionAndEpoch>
+                                <ns3:Equinox xmlns:ns3="http://www.salt.ac.za/PIPT/Shared/1.4">2000.0</ns3:Equinox>
+                            </ns2:Coordinates>
+                            <ns2:MagnitudeRange>
+                                <ns2:Bandpass>V</ns2:Bandpass>
+                                <ns2:Minimum>14.71</ns2:Minimum>
+                                <ns2:Maximum>14.71</ns2:Maximum>
+                            </ns2:MagnitudeRange>
+                            <ns2:PeriodicTargetEphemeris>
+                                <ns2:TimeZero>
+                                    <ns2:TimeValue>2450540.14</ns2:TimeValue>
+                                    <ns2:TimeBase>HJD</ns2:TimeBase>
+                                </ns2:TimeZero>
+                                <ns2:Period>
+                                    <ns2:Value>3.14159</ns2:Value>
+                                    <ns2:Units>days</ns2:Units>
+                                </ns2:Period>
+                                <ns2:Pdot>
+                                    <ns2:Value>0.0</ns2:Value>
+                                    <ns2:Units>days/day</ns2:Units>
+                                </ns2:Pdot>
+                            </ns2:PeriodicTargetEphemeris>
+                            <ns2:FindingChart>
+                                <ns2:Path>Included/2e389f565d2cd4511cc3ab3191574929.pdf</ns2:Path>
+                            </ns2:FindingChart>
+                            <ns2:Mandatory>true</ns2:Mandatory>
+                        </ns2:Target>
+                        <ns1:TelescopeConfig useWithReferenceName="TelescopeConfig" useWithReferenceNamespaceURI="http://www.salt.ac.za/PIPT/Proposal/Phase2/4.8">
+                            <ns1:Name>Telescope Configuration</ns1:Name>
+                            <ns1:Iterations>1</ns1:Iterations>
+                            <ns1:PayloadConfig useWithReferenceName="PayloadConfig" useWithReferenceNamespaceURI="http://www.salt.ac.za/PIPT/Proposal/Phase2/4.8">
+                                <ns1:Name>Payload Configuration</ns1:Name>
+                                <ns1:Type>Acquisition</ns1:Type>
+                                <ns1:GuideMethod>None</ns1:GuideMethod>
+                                <ns1:PellicleConfig>false</ns1:PellicleConfig>
+                                <ns1:WaitOnOtherInstrument>true</ns1:WaitOnOtherInstrument>
+                                <ns4:Salticam xmlns:ns4="http://www.salt.ac.za/PIPT/Salticam/Phase2/1.9" useWithReferenceName="Instrument" useWithReferenceNamespaceURI="http://www.salt.ac.za/PIPT/Proposal/Phase2/4.8">
+                                    <ns4:Name>Salticam Configuration</ns4:Name>
+                                    <ns4:Cycles>1</ns4:Cycles>
+                                    <ns4:SalticamProcedure>
+                                        <ns4:SalticamFilterArray>
+                                            <ns4:Filter>Johnson V</ns4:Filter>
+                                            <ns4:ExposureTime>
+                                                <ns3:Value xmlns:ns3="http://www.salt.ac.za/PIPT/Shared/1.4">1.0</ns3:Value>
+                                                <ns3:Units xmlns:ns3="http://www.salt.ac.za/PIPT/Shared/1.4">seconds</ns3:Units>
+                                            </ns4:ExposureTime>
+                                        </ns4:SalticamFilterArray>
+                                    </ns4:SalticamProcedure>
+                                    <ns4:SalticamDetector>
+                                        <ns4:DetMode>Normal</ns4:DetMode>
+                                        <ns4:PreBinRows>2</ns4:PreBinRows>
+                                        <ns4:PreBinCols>2</ns4:PreBinCols>
+                                        <ns4:ExposureType>Science</ns4:ExposureType>
+                                        <ns4:Gain>Bright</ns4:Gain>
+                                        <ns4:ReadoutSpeed>Fast</ns4:ReadoutSpeed>
+                                        <ns4:Iterations>1</ns4:Iterations>
+                                    </ns4:SalticamDetector>
+                                    <ns4:MinimumSN>0</ns4:MinimumSN>
+                                    <ns4:InCalibration>false</ns4:InCalibration>
+                                </ns4:Salticam>
+                            </ns1:PayloadConfig>
+                        </ns1:TelescopeConfig>
+                    </ns1:Acquisition>
+                    <ns1:TelescopeConfig useWithReferenceName="TelescopeConfig" useWithReferenceNamespaceURI="http://www.salt.ac.za/PIPT/Proposal/Phase2/4.8">
+                        <ns1:Name>[Telescope Configuration]</ns1:Name>
+                        <ns1:Iterations>1</ns1:Iterations>
+                        <ns1:OnSkyPositionAngle>
+                            <ns1:Value>0.0</ns1:Value>
+                            <ns1:Units>degrees</ns1:Units>
+                        </ns1:OnSkyPositionAngle>
+                        <ns1:PayloadConfig useWithReferenceName="PayloadConfig" useWithReferenceNamespaceURI="http://www.salt.ac.za/PIPT/Proposal/Phase2/4.8">
+                            <ns1:Name>[Payload Configuration]</ns1:Name>
+                            <ns1:Type>Science</ns1:Type>
+                            <ns1:GuideMethod>Default</ns1:GuideMethod>
+                            <ns1:PellicleConfig>false</ns1:PellicleConfig>
+                            <ns1:WaitOnOtherInstrument>true</ns1:WaitOnOtherInstrument>
+                            <ns5:Rss xmlns:ns5="http://www.salt.ac.za/PIPT/RSS/Phase2/2.3" useWithReferenceName="Instrument" useWithReferenceNamespaceURI="http://www.salt.ac.za/PIPT/Proposal/Phase2/4.8">
+                                <ns5:Name>fainter G0900 spectropolarimetry</ns5:Name>
+                                <ns5:RssProcedure>
+                                    <ns5:WaveplatePattern>
+                                        <ns5:PatternStep>
+                                            <ns5:HWStation>0_0</ns5:HWStation>
+                                        </ns5:PatternStep>
+                                        <ns5:PatternStep>
+                                            <ns5:HWStation>4_45.00</ns5:HWStation>
+                                        </ns5:PatternStep>
+                                        <ns5:PatternStep>
+                                            <ns5:HWStation>2_22.50</ns5:HWStation>
+                                        </ns5:PatternStep>
+                                        <ns5:PatternStep>
+                                            <ns5:HWStation>6_67.50</ns5:HWStation>
+                                        </ns5:PatternStep>
+                                    </ns5:WaveplatePattern>
+                                </ns5:RssProcedure>
+                                <ns5:RssConfig>
+                                    <ns5:SlitMask>
+                                        <ns5:PredefinedMask>
+                                            <ns5:Barcode>PL0125P001</ns5:Barcode>
+                                        </ns5:PredefinedMask>
+                                    </ns5:SlitMask>
+                                    <ns5:Mode>
+                                        <ns5:Spectroscopy>
+                                            <ns5:Grating>pg0900</ns5:Grating>
+                                            <ns5:GratingAngle>
+                                                <ns6:Value xmlns:ns6="http://www.salt.ac.za/PIPT/RSS/Shared/1.11">15.125</ns6:Value>
+                                                <ns6:Units xmlns:ns6="http://www.salt.ac.za/PIPT/RSS/Shared/1.11">degrees</ns6:Units>
+                                            </ns5:GratingAngle>
+                                            <ns5:ArtStation>39_30.25</ns5:ArtStation>
+                                        </ns5:Spectroscopy>
+                                    </ns5:Mode>
+                                    <ns5:FilterId>pc03850</ns5:FilterId>
+                                    <ns5:Polarimetry>
+                                        <ns5:BeamsplitterOrientation>normal</ns5:BeamsplitterOrientation>
+                                    </ns5:Polarimetry>
+                                    <ns5:FocusPosition>
+                                        <ns5:Value>1000</ns5:Value>
+                                        <ns5:Units>microns</ns5:Units>
+                                    </ns5:FocusPosition>
+                                </ns5:RssConfig>
+                                <ns5:RssDetector>
+                                    <ns5:DetMode>Normal</ns5:DetMode>
+                                    <ns5:Iterations>1</ns5:Iterations>
+                                    <ns5:PreShuffle>0</ns5:PreShuffle>
+                                    <ns5:PostShuffle>0</ns5:PostShuffle>
+                                    <ns5:PreBinRows>4</ns5:PreBinRows>
+                                    <ns5:PreBinCols>2</ns5:PreBinCols>
+                                    <ns5:Prepare>true</ns5:Prepare>
+                                    <ns5:ExposureType>Science</ns5:ExposureType>
+                                    <ns5:ExposureTime>
+                                        <ns3:Value xmlns:ns3="http://www.salt.ac.za/PIPT/Shared/1.4">157.0</ns3:Value>
+                                        <ns3:Units xmlns:ns3="http://www.salt.ac.za/PIPT/Shared/1.4">seconds</ns3:Units>
+                                    </ns5:ExposureTime>
+                                    <ns5:Gain>Bright</ns5:Gain>
+                                    <ns5:ReadoutSpeed>Fast</ns5:ReadoutSpeed>
+                                    <ns5:DetectorCalculation>None</ns5:DetectorCalculation>
+                                </ns5:RssDetector>
+                                <ns5:MinimumSN>0</ns5:MinimumSN>
+                                <ns5:Cycles>3</ns5:Cycles>
+                                <ns5:RssCalibration>
+                                    <ns5:RssArc>
+                                        <ns5:UseDefaultArcLamp/>
+                                        <ns5:ArcExposureTime>
+                                            <ns3:Value xmlns:ns3="http://www.salt.ac.za/PIPT/Shared/1.4">5.0</ns3:Value>
+                                            <ns3:Units xmlns:ns3="http://www.salt.ac.za/PIPT/Shared/1.4">seconds</ns3:Units>
+                                        </ns5:ArcExposureTime>
+                                        <ns5:Iterations>1</ns5:Iterations>
+                                        <ns5:ArcRequirement>After science</ns5:ArcRequirement>
+                                        <ns5:DoneBetweenDitheringSteps>false</ns5:DoneBetweenDitheringSteps>
+                                    </ns5:RssArc>
+                                </ns5:RssCalibration>
+                                <ns5:RssNonChargedCalibration>
+                                    <ns5:RssSpectroscopicFlat>
+                                        <ns5:Type>Lamp</ns5:Type>
+                                        <ns5:Iterations>5</ns5:Iterations>
+                                    </ns5:RssSpectroscopicFlat>
+                                </ns5:RssNonChargedCalibration>
+                                <ns5:InCalibration>false</ns5:InCalibration>
+                            </ns5:Rss>
+                        </ns1:PayloadConfig>
+                    </ns1:TelescopeConfig>
+                    <ns1:PipelineConfig>
+                        <ns1:Notification>Normal</ns1:Notification>
+                        <ns1:ReductionDocumentationFormat>HTML</ns1:ReductionDocumentationFormat>
+                    </ns1:PipelineConfig>
+                </ns1:Observation>
+            </ns1:Pointing>
+        </ns1:SubSubBlock>
+    </ns1:SubBlock>
+</ns1:Block>
