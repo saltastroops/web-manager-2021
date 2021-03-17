@@ -1,3 +1,4 @@
+import json
 from typing import Dict
 
 from aiomysql import Pool
@@ -57,7 +58,7 @@ async def get_block_html(
     settings: Settings = Depends(get_settings),
     user: User = Depends(get_current_user),
 ) -> Dict[str, str]:
-    block_content = await block.get_block_html(
+    block_content = await block.get_block(
         proposal_code, block_code, settings.proposals_base_dir
     )
-    return {"html": block_content}
+    return {"html": f"<pre>{json.dumps(block_content, indent=2)}</pre>"}
