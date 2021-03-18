@@ -117,6 +117,14 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
+name = "colored"
+version = "1.4.2"
+description = "Simple library for color and formatting to terminal"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "coverage"
 version = "5.4"
 description = "Code coverage measurement for Python"
@@ -814,6 +822,23 @@ python-versions = ">=3.6"
 pbr = ">=2.0.0,<2.1.0 || >2.1.0"
 
 [[package]]
+name = "syrupy"
+version = "1.1.0"
+description = "PyTest Snapshot Test Utility"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+attrs = ">=18.2.0,<21.0.0"
+colored = ">=1.3.92,<2.0.0"
+pytest = ">=5.1.0,<7.0.0"
+
+[package.extras]
+dev = ["black", "flake8-bugbear", "flake8-builtins", "flake8-comprehensions", "flake8-i18n", "flake8", "isort", "mypy", "pip-tools", "py-githooks", "pygithub", "pyperf", "semver", "twine", "wheel", "codecov", "coverage", "invoke"]
+test = ["codecov", "coverage", "invoke"]
+
+[[package]]
 name = "termcolor"
 version = "1.1.0"
 description = "ANSII Color formatting for output in terminal."
@@ -944,7 +969,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "88746651488ae708582d1b93c0b2a15997f9dc91e8f5c3157cc0861a33d3c46d"
+content-hash = "70a2482368893304bc5a154d70249037b33a64ab27bae80280c4927d204ca897"
 
 [metadata.files]
 aiofiles = [
@@ -1024,6 +1049,9 @@ click = [
 colorama = [
     {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
     {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
+]
+colored = [
+    {file = "colored-1.4.2.tar.gz", hash = "sha256:056fac09d9e39b34296e7618897ed1b8c274f98423770c2980d829fd670955ed"},
 ]
 coverage = [
     {file = "coverage-5.4-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:6d9c88b787638a451f41f97446a1c9fd416e669b4d9717ae4615bd29de1ac135"},
@@ -1455,6 +1483,10 @@ starlette = [
 stevedore = [
     {file = "stevedore-3.3.0-py3-none-any.whl", hash = "sha256:50d7b78fbaf0d04cd62411188fa7eedcb03eb7f4c4b37005615ceebe582aa82a"},
     {file = "stevedore-3.3.0.tar.gz", hash = "sha256:3a5bbd0652bf552748871eaa73a4a8dc2899786bc497a2aa1fcb4dcdb0debeee"},
+]
+syrupy = [
+    {file = "syrupy-1.1.0-py3-none-any.whl", hash = "sha256:262456c69ad9f3e099955c3f7f0a42193ba4a6299b4293cb7588e0b7ae0cf9e5"},
+    {file = "syrupy-1.1.0.tar.gz", hash = "sha256:5e2d34d68b365908885b5c8e7b3e5eee845e89441f3793cc5d78503f5f890f3d"},
 ]
 termcolor = [
     {file = "termcolor-1.1.0.tar.gz", hash = "sha256:1d6d69ce66211143803fbc56652b41d73b4a400a2891d7bf7a1cdf4c02de613b"},

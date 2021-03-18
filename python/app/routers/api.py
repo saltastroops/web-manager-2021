@@ -6,8 +6,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 
-from app.dependencies import get_current_user, get_db, get_settings
-from app.models.pydantic import AccessToken, User
+from app.dependencies import (
+    get_current_user,
+    get_db,
+    get_semester,
+    get_settings,
+)
+from app.models.pydantic import AccessToken, Semester, User
 from app.service import block
 from app.settings import Settings
 from app.util import auth
@@ -55,10 +60,11 @@ async def login_for_access_token(
 async def get_block_html(
     proposal_code: str,
     block_code: str,
+    semester: Semester = Depends(get_semester),
     settings: Settings = Depends(get_settings),
     user: User = Depends(get_current_user),
 ) -> Dict[str, str]:
     block_content = await block.get_block(
-        proposal_code, block_code, settings.proposals_base_dir
+        proposal_code, block_code, semester, settings.proposals_base_dir
     )
     return {"html": f"<pre>{json.dumps(block_content, indent=2)}</pre>"}

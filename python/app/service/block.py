@@ -2,7 +2,7 @@
 import collections
 import pathlib
 import re
-from typing import Any, List, OrderedDict
+from typing import Any, List, OrderedDict, cast
 
 import aiofiles
 import xmltodict
@@ -44,7 +44,9 @@ async def _block_json_from_xml_file(
     async with aiofiles.open(block_xml, mode="r") as f:
         content = await f.read()
         block_dict = xmltodict.parse(content)
-        block_without_namespaces = _clean_block_dict(block_dict)["Block"]
+        block_without_namespaces = cast(
+            OrderedDict[str, Any], _clean_block_dict(block_dict)["Block"]
+        )
         return block_without_namespaces
 
 

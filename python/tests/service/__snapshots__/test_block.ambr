@@ -1,0 +1,588 @@
+# name: test_get_block_returns_correct_value[2020-2-SCI-065-abcd1234-semester0]
+  <class 'OrderedDict'> {
+    '@id': 'Block-10',
+    'BlockCode': 'fd6b10fe-6400-4676-ad6d-6283ac598295',
+    'BlockSemester': <class 'list'> [
+      <class 'OrderedDict'> {
+        'Comments': 'P0 used to pick up a low-visibility needed phase.',
+        'InPool': <class 'OrderedDict'> {
+          'PoolCode': '9e840e44-3964-4575-aa3e-1c3ff5409375',
+        },
+        'Priority': '0',
+        'Ranking': 'High',
+        'Semester': '2',
+        'Visits': '1',
+        'Wait': <class 'OrderedDict'> {
+          'Units': 'days',
+          'Value': '1.0',
+        },
+        'Year': '2018',
+      },
+      <class 'OrderedDict'> {
+        'Comments': 'P0 used to pick up a low-visibility needed phase.',
+        'InPool': <class 'OrderedDict'> {
+          'PoolCode': '9e840e44-3964-4575-aa3e-1c3ff5409375',
+        },
+        'Priority': '0',
+        'Ranking': 'High',
+        'Semester': '1',
+        'Visits': '15',
+        'Year': '2019',
+      },
+      <class 'OrderedDict'> {
+        'Comments': '2400 secs + 600 sec acquisition. P0 used to pick up a low-visibility needed phase.',
+        'InPool': <class 'OrderedDict'> {
+          'PoolCode': '9e840e44-3964-4575-aa3e-1c3ff5409375',
+        },
+        'Priority': '0',
+        'Ranking': 'High',
+        'Semester': '2',
+        'Visits': '20',
+        'Year': '2019',
+      },
+      <class 'OrderedDict'> {
+        'Comments': '2400 secs + 600 sec acquisition. P0 used to pick up a low-visibility needed phase.',
+        'InPool': <class 'OrderedDict'> {
+          'PoolCode': '9e840e44-3964-4575-aa3e-1c3ff5409375',
+        },
+        'Priority': '0',
+        'Ranking': 'High',
+        'Semester': '1',
+        'Visits': '19',
+        'Year': '2020',
+      },
+    ],
+    'BlockType': 'Science',
+    'Charged': 'true',
+    'MaxVisits': '20',
+    'MaximumLunarPhase': <class 'OrderedDict'> {
+      'Units': '%',
+      'Value': '100.0',
+    },
+    'MinimumLunarAngularDistance': <class 'OrderedDict'> {
+      'Units': 'degrees',
+      'Value': '30.0',
+    },
+    'Name': 'Some Target P0',
+    'SeeingConstraint': <class 'OrderedDict'> {
+      'Maximum': <class 'OrderedDict'> {
+        'Units': 'arcseconds',
+        'Value': '3.0',
+      },
+      'Minimum': <class 'OrderedDict'> {
+        'Units': 'arcseconds',
+        'Value': '0.1',
+      },
+    },
+    'SubBlock': <class 'OrderedDict'> {
+      'Iterations': '1',
+      'Name': '[SubBlock]',
+      'SubSubBlock': <class 'OrderedDict'> {
+        'Iterations': '1',
+        'Name': '[SubSubBlock]',
+        'Pointing': <class 'OrderedDict'> {
+          'Name': '[Pointing]',
+          'Observation': <class 'OrderedDict'> {
+            'Acquisition': <class 'OrderedDict'> {
+              'Name': 'Some Target',
+              'Target': <class 'OrderedDict'> {
+                'Coordinates': <class 'OrderedDict'> {
+                  'Declination': <class 'OrderedDict'> {
+                    'Arcminutes': '57',
+                    'Arcseconds': '38.7',
+                    'Degrees': '23',
+                    'Sign': '-',
+                    'ns3': 'http://www.salt.ac.za/PIPT/Shared/1.4',
+                  },
+                  'Equinox': '2000.0',
+                  'ProperMotionAndEpoch': <class 'OrderedDict'> {
+                    'DeclinationDot': <class 'OrderedDict'> {
+                      'Units': 'arcseconds/year',
+                      'Value': '0.0055',
+                    },
+                    'Epoch': '2000-01-01T00:00:00.791Z',
+                    'RightAscensionDot': <class 'OrderedDict'> {
+                      'Units': 'arcseconds/year',
+                      'Value': '-0.0024',
+                    },
+                    'ns3': 'http://www.salt.ac.za/PIPT/Shared/1.4',
+                  },
+                  'RightAscension': <class 'OrderedDict'> {
+                    'Hours': '15',
+                    'Minutes': '23',
+                    'Seconds': '16.954',
+                    'ns3': 'http://www.salt.ac.za/PIPT/Shared/1.4',
+                  },
+                },
+                'FindingChart': <class 'OrderedDict'> {
+                  'Path': 'Included/2e389f565d2cd4511cc3ab3191574929.pdf',
+                },
+                'MagnitudeRange': <class 'OrderedDict'> {
+                  'Bandpass': 'V',
+                  'Maximum': '14.71',
+                  'Minimum': '14.71',
+                },
+                'Mandatory': 'true',
+                'Name': 'Some Target',
+                'PeriodicTargetEphemeris': <class 'OrderedDict'> {
+                  'Pdot': <class 'OrderedDict'> {
+                    'Units': 'days/day',
+                    'Value': '0.0',
+                  },
+                  'Period': <class 'OrderedDict'> {
+                    'Units': 'days',
+                    'Value': '3.14159',
+                  },
+                  'TimeZero': <class 'OrderedDict'> {
+                    'TimeBase': 'HJD',
+                    'TimeValue': '2450540.14',
+                  },
+                },
+                'TargetCode': '172529be-de04-42c7-96ed-e3d84f3d7cd2',
+                'TargetType': 'WR*',
+                'ns2': 'http://www.salt.ac.za/PIPT/Proposal/Shared/2.7',
+              },
+              'TelescopeConfig': <class 'OrderedDict'> {
+                'Iterations': '1',
+                'Name': 'Telescope Configuration',
+                'PayloadConfig': <class 'OrderedDict'> {
+                  'GuideMethod': 'None',
+                  'Name': 'Payload Configuration',
+                  'PellicleConfig': 'false',
+                  'Salticam': <class 'OrderedDict'> {
+                    'Cycles': '1',
+                    'InCalibration': 'false',
+                    'MinimumSN': '0',
+                    'Name': 'Salticam Configuration',
+                    'SalticamDetector': <class 'OrderedDict'> {
+                      'DetMode': 'Normal',
+                      'ExposureType': 'Science',
+                      'Gain': 'Bright',
+                      'Iterations': '1',
+                      'PreBinCols': '2',
+                      'PreBinRows': '2',
+                      'ReadoutSpeed': 'Fast',
+                    },
+                    'SalticamProcedure': <class 'OrderedDict'> {
+                      'SalticamFilterArray': <class 'OrderedDict'> {
+                        'ExposureTime': <class 'OrderedDict'> {
+                          'Units': 'seconds',
+                          'Value': '1.0',
+                        },
+                        'Filter': 'Johnson V',
+                      },
+                    },
+                    'ns4': 'http://www.salt.ac.za/PIPT/Salticam/Phase2/1.9',
+                  },
+                  'Type': 'Acquisition',
+                  'WaitOnOtherInstrument': 'true',
+                },
+              },
+            },
+            'Name': 'Some Target',
+            'PipelineConfig': <class 'OrderedDict'> {
+              'Notification': 'Normal',
+              'ReductionDocumentationFormat': 'HTML',
+            },
+            'TelescopeConfig': <class 'OrderedDict'> {
+              'Iterations': '1',
+              'Name': '[Telescope Configuration]',
+              'OnSkyPositionAngle': <class 'OrderedDict'> {
+                'Units': 'degrees',
+                'Value': '0.0',
+              },
+              'PayloadConfig': <class 'OrderedDict'> {
+                'GuideMethod': 'Default',
+                'Name': '[Payload Configuration]',
+                'PellicleConfig': 'false',
+                'Rss': <class 'OrderedDict'> {
+                  'Cycles': '3',
+                  'InCalibration': 'false',
+                  'MinimumSN': '0',
+                  'Name': 'fainter G0900 spectropolarimetry',
+                  'RssCalibration': <class 'OrderedDict'> {
+                    'RssArc': <class 'OrderedDict'> {
+                      'ArcExposureTime': <class 'OrderedDict'> {
+                        'Units': 'seconds',
+                        'Value': '5.0',
+                      },
+                      'ArcRequirement': 'After science',
+                      'DoneBetweenDitheringSteps': 'false',
+                      'Iterations': '1',
+                      'UseDefaultArcLamp': None,
+                    },
+                  },
+                  'RssConfig': <class 'OrderedDict'> {
+                    'FilterId': 'pc03850',
+                    'FocusPosition': <class 'OrderedDict'> {
+                      'Units': 'microns',
+                      'Value': '1000',
+                    },
+                    'Mode': <class 'OrderedDict'> {
+                      'Spectroscopy': <class 'OrderedDict'> {
+                        'ArtStation': '39_30.25',
+                        'Grating': 'pg0900',
+                        'GratingAngle': <class 'OrderedDict'> {
+                          'Units': 'degrees',
+                          'Value': '15.125',
+                        },
+                      },
+                    },
+                    'Polarimetry': <class 'OrderedDict'> {
+                      'BeamsplitterOrientation': 'normal',
+                    },
+                    'SlitMask': <class 'OrderedDict'> {
+                      'PredefinedMask': <class 'OrderedDict'> {
+                        'Barcode': 'PL0125P001',
+                      },
+                    },
+                  },
+                  'RssDetector': <class 'OrderedDict'> {
+                    'DetMode': 'Normal',
+                    'DetectorCalculation': 'None',
+                    'ExposureTime': <class 'OrderedDict'> {
+                      'Units': 'seconds',
+                      'Value': '157.0',
+                    },
+                    'ExposureType': 'Science',
+                    'Gain': 'Bright',
+                    'Iterations': '1',
+                    'PostShuffle': '0',
+                    'PreBinCols': '2',
+                    'PreBinRows': '4',
+                    'PreShuffle': '0',
+                    'Prepare': 'true',
+                    'ReadoutSpeed': 'Fast',
+                  },
+                  'RssNonChargedCalibration': <class 'OrderedDict'> {
+                    'RssSpectroscopicFlat': <class 'OrderedDict'> {
+                      'Iterations': '5',
+                      'Type': 'Lamp',
+                    },
+                  },
+                  'RssProcedure': <class 'OrderedDict'> {
+                    'WaveplatePattern': <class 'OrderedDict'> {
+                      'PatternStep': <class 'list'> [
+                        <class 'OrderedDict'> {
+                          'HWStation': '0_0',
+                        },
+                        <class 'OrderedDict'> {
+                          'HWStation': '4_45.00',
+                        },
+                        <class 'OrderedDict'> {
+                          'HWStation': '2_22.50',
+                        },
+                        <class 'OrderedDict'> {
+                          'HWStation': '6_67.50',
+                        },
+                      ],
+                    },
+                  },
+                  'ns5': 'http://www.salt.ac.za/PIPT/RSS/Phase2/2.3',
+                },
+                'Type': 'Science',
+                'WaitOnOtherInstrument': 'true',
+              },
+            },
+          },
+        },
+      },
+    },
+    'Transparency': 'Thin cloud',
+    'ns1': 'http://www.salt.ac.za/PIPT/Proposal/Phase2/4.8',
+  }
+---
+# name: test_get_block_returns_correct_value[2020-2-SCI-065-abcd1234-semester1]
+  <class 'OrderedDict'> {
+    '@id': 'Block-10',
+    'BlockCode': 'fd6b10fe-6400-4676-ad6d-6283ac598295',
+    'BlockSemester': <class 'list'> [
+      <class 'OrderedDict'> {
+        'Comments': 'P0 used to pick up a low-visibility needed phase.',
+        'InPool': <class 'OrderedDict'> {
+          'PoolCode': '9e840e44-3964-4575-aa3e-1c3ff5409375',
+        },
+        'Priority': '0',
+        'Ranking': 'High',
+        'Semester': '2',
+        'Visits': '1',
+        'Wait': <class 'OrderedDict'> {
+          'Units': 'days',
+          'Value': '1.0',
+        },
+        'Year': '2018',
+      },
+      <class 'OrderedDict'> {
+        'Comments': 'P0 used to pick up a low-visibility needed phase.',
+        'InPool': <class 'OrderedDict'> {
+          'PoolCode': '9e840e44-3964-4575-aa3e-1c3ff5409375',
+        },
+        'Priority': '0',
+        'Ranking': 'High',
+        'Semester': '1',
+        'Visits': '15',
+        'Year': '2019',
+      },
+      <class 'OrderedDict'> {
+        'Comments': '2400 secs + 600 sec acquisition. P0 used to pick up a low-visibility needed phase.',
+        'InPool': <class 'OrderedDict'> {
+          'PoolCode': '9e840e44-3964-4575-aa3e-1c3ff5409375',
+        },
+        'Priority': '0',
+        'Ranking': 'High',
+        'Semester': '2',
+        'Visits': '20',
+        'Year': '2019',
+      },
+      <class 'OrderedDict'> {
+        'Comments': '2400 secs + 600 sec acquisition. P0 used to pick up a low-visibility needed phase.',
+        'InPool': <class 'OrderedDict'> {
+          'PoolCode': '9e840e44-3964-4575-aa3e-1c3ff5409375',
+        },
+        'Priority': '0',
+        'Ranking': 'High',
+        'Semester': '1',
+        'Visits': '19',
+        'Year': '2020',
+      },
+    ],
+    'BlockType': 'Science',
+    'Charged': 'true',
+    'MaxVisits': '20',
+    'MaximumLunarPhase': <class 'OrderedDict'> {
+      'Units': '%',
+      'Value': '100.0',
+    },
+    'MinimumLunarAngularDistance': <class 'OrderedDict'> {
+      'Units': 'degrees',
+      'Value': '30.0',
+    },
+    'Name': 'Some Target P0',
+    'SeeingConstraint': <class 'OrderedDict'> {
+      'Maximum': <class 'OrderedDict'> {
+        'Units': 'arcseconds',
+        'Value': '3.0',
+      },
+      'Minimum': <class 'OrderedDict'> {
+        'Units': 'arcseconds',
+        'Value': '0.1',
+      },
+    },
+    'SubBlock': <class 'OrderedDict'> {
+      'Iterations': '1',
+      'Name': '[SubBlock]',
+      'SubSubBlock': <class 'OrderedDict'> {
+        'Iterations': '1',
+        'Name': '[SubSubBlock]',
+        'Pointing': <class 'OrderedDict'> {
+          'Name': '[Pointing]',
+          'Observation': <class 'OrderedDict'> {
+            'Acquisition': <class 'OrderedDict'> {
+              'Name': 'Some Target',
+              'Target': <class 'OrderedDict'> {
+                'Coordinates': <class 'OrderedDict'> {
+                  'Declination': <class 'OrderedDict'> {
+                    'Arcminutes': '57',
+                    'Arcseconds': '38.7',
+                    'Degrees': '23',
+                    'Sign': '-',
+                    'ns3': 'http://www.salt.ac.za/PIPT/Shared/1.4',
+                  },
+                  'Equinox': '2000.0',
+                  'ProperMotionAndEpoch': <class 'OrderedDict'> {
+                    'DeclinationDot': <class 'OrderedDict'> {
+                      'Units': 'arcseconds/year',
+                      'Value': '0.0055',
+                    },
+                    'Epoch': '2000-01-01T00:00:00.791Z',
+                    'RightAscensionDot': <class 'OrderedDict'> {
+                      'Units': 'arcseconds/year',
+                      'Value': '-0.0024',
+                    },
+                    'ns3': 'http://www.salt.ac.za/PIPT/Shared/1.4',
+                  },
+                  'RightAscension': <class 'OrderedDict'> {
+                    'Hours': '15',
+                    'Minutes': '23',
+                    'Seconds': '16.954',
+                    'ns3': 'http://www.salt.ac.za/PIPT/Shared/1.4',
+                  },
+                },
+                'FindingChart': <class 'OrderedDict'> {
+                  'Path': 'Included/2e389f565d2cd4511cc3ab3191574929.pdf',
+                },
+                'MagnitudeRange': <class 'OrderedDict'> {
+                  'Bandpass': 'V',
+                  'Maximum': '14.71',
+                  'Minimum': '14.71',
+                },
+                'Mandatory': 'true',
+                'Name': 'Some Target',
+                'PeriodicTargetEphemeris': <class 'OrderedDict'> {
+                  'Pdot': <class 'OrderedDict'> {
+                    'Units': 'days/day',
+                    'Value': '0.0',
+                  },
+                  'Period': <class 'OrderedDict'> {
+                    'Units': 'days',
+                    'Value': '3.14159',
+                  },
+                  'TimeZero': <class 'OrderedDict'> {
+                    'TimeBase': 'HJD',
+                    'TimeValue': '2450540.14',
+                  },
+                },
+                'TargetCode': '172529be-de04-42c7-96ed-e3d84f3d7cd2',
+                'TargetType': 'WR*',
+                'ns2': 'http://www.salt.ac.za/PIPT/Proposal/Shared/2.7',
+              },
+              'TelescopeConfig': <class 'OrderedDict'> {
+                'Iterations': '1',
+                'Name': 'Telescope Configuration',
+                'PayloadConfig': <class 'OrderedDict'> {
+                  'GuideMethod': 'None',
+                  'Name': 'Payload Configuration',
+                  'PellicleConfig': 'false',
+                  'Salticam': <class 'OrderedDict'> {
+                    'Cycles': '1',
+                    'InCalibration': 'false',
+                    'MinimumSN': '0',
+                    'Name': 'Salticam Configuration',
+                    'SalticamDetector': <class 'OrderedDict'> {
+                      'DetMode': 'Normal',
+                      'ExposureType': 'Science',
+                      'Gain': 'Bright',
+                      'Iterations': '1',
+                      'PreBinCols': '2',
+                      'PreBinRows': '2',
+                      'ReadoutSpeed': 'Fast',
+                    },
+                    'SalticamProcedure': <class 'OrderedDict'> {
+                      'SalticamFilterArray': <class 'OrderedDict'> {
+                        'ExposureTime': <class 'OrderedDict'> {
+                          'Units': 'seconds',
+                          'Value': '1.0',
+                        },
+                        'Filter': 'Johnson V',
+                      },
+                    },
+                    'ns4': 'http://www.salt.ac.za/PIPT/Salticam/Phase2/1.9',
+                  },
+                  'Type': 'Acquisition',
+                  'WaitOnOtherInstrument': 'true',
+                },
+              },
+            },
+            'Name': 'Some Target',
+            'PipelineConfig': <class 'OrderedDict'> {
+              'Notification': 'Normal',
+              'ReductionDocumentationFormat': 'HTML',
+            },
+            'TelescopeConfig': <class 'OrderedDict'> {
+              'Iterations': '1',
+              'Name': '[Telescope Configuration]',
+              'OnSkyPositionAngle': <class 'OrderedDict'> {
+                'Units': 'degrees',
+                'Value': '0.0',
+              },
+              'PayloadConfig': <class 'OrderedDict'> {
+                'GuideMethod': 'Default',
+                'Name': '[Payload Configuration]',
+                'PellicleConfig': 'false',
+                'Rss': <class 'OrderedDict'> {
+                  'Cycles': '3',
+                  'InCalibration': 'false',
+                  'MinimumSN': '0',
+                  'Name': 'fainter G0900 spectropolarimetry',
+                  'RssCalibration': <class 'OrderedDict'> {
+                    'RssArc': <class 'OrderedDict'> {
+                      'ArcExposureTime': <class 'OrderedDict'> {
+                        'Units': 'seconds',
+                        'Value': '5.0',
+                      },
+                      'ArcRequirement': 'After science',
+                      'DoneBetweenDitheringSteps': 'false',
+                      'Iterations': '1',
+                      'UseDefaultArcLamp': None,
+                    },
+                  },
+                  'RssConfig': <class 'OrderedDict'> {
+                    'FilterId': 'pc03850',
+                    'FocusPosition': <class 'OrderedDict'> {
+                      'Units': 'microns',
+                      'Value': '1000',
+                    },
+                    'Mode': <class 'OrderedDict'> {
+                      'Spectroscopy': <class 'OrderedDict'> {
+                        'ArtStation': '39_30.25',
+                        'Grating': 'pg0900',
+                        'GratingAngle': <class 'OrderedDict'> {
+                          'Units': 'degrees',
+                          'Value': '15.125',
+                        },
+                      },
+                    },
+                    'Polarimetry': <class 'OrderedDict'> {
+                      'BeamsplitterOrientation': 'normal',
+                    },
+                    'SlitMask': <class 'OrderedDict'> {
+                      'PredefinedMask': <class 'OrderedDict'> {
+                        'Barcode': 'PL0125P001',
+                      },
+                    },
+                  },
+                  'RssDetector': <class 'OrderedDict'> {
+                    'DetMode': 'Normal',
+                    'DetectorCalculation': 'None',
+                    'ExposureTime': <class 'OrderedDict'> {
+                      'Units': 'seconds',
+                      'Value': '157.0',
+                    },
+                    'ExposureType': 'Science',
+                    'Gain': 'Bright',
+                    'Iterations': '1',
+                    'PostShuffle': '0',
+                    'PreBinCols': '2',
+                    'PreBinRows': '4',
+                    'PreShuffle': '0',
+                    'Prepare': 'true',
+                    'ReadoutSpeed': 'Fast',
+                  },
+                  'RssNonChargedCalibration': <class 'OrderedDict'> {
+                    'RssSpectroscopicFlat': <class 'OrderedDict'> {
+                      'Iterations': '5',
+                      'Type': 'Lamp',
+                    },
+                  },
+                  'RssProcedure': <class 'OrderedDict'> {
+                    'WaveplatePattern': <class 'OrderedDict'> {
+                      'PatternStep': <class 'list'> [
+                        <class 'OrderedDict'> {
+                          'HWStation': '0_0',
+                        },
+                        <class 'OrderedDict'> {
+                          'HWStation': '4_45.00',
+                        },
+                        <class 'OrderedDict'> {
+                          'HWStation': '2_22.50',
+                        },
+                        <class 'OrderedDict'> {
+                          'HWStation': '6_67.50',
+                        },
+                      ],
+                    },
+                  },
+                  'ns5': 'http://www.salt.ac.za/PIPT/RSS/Phase2/2.3',
+                },
+                'Type': 'Science',
+                'WaitOnOtherInstrument': 'true',
+              },
+            },
+          },
+        },
+      },
+    },
+    'Transparency': 'Thin cloud',
+    'ns1': 'http://www.salt.ac.za/PIPT/Proposal/Phase2/4.8',
+  }
+---
