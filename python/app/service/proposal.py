@@ -3,7 +3,7 @@ from aiomysql import connect
 from util import Semester
 
 
-def get_proposal_text(proposal_code: str, semester: Semester, db: connect) -> Dict:
+async def get_proposal_text(proposal_code: str, semester: Semester, db: connect) -> Dict:
     sql = """
 SELECT Title, Abstract, ReadMe, NightLogSummary FROM ProposalText as pt
 JOIN ProposalCode AS pc ON pt.ProposalCode_Id = pc.ProposalCode_Id
@@ -30,7 +30,7 @@ WHERE Proposal_Code = %(proposal_code)s AND s.Year = %(year)s AND s.Semester = %
                 )
 
 
-def get_proposal_investigators(proposal_code: str, db: connect) -> List[Dict]:
+async def get_proposal_investigators(proposal_code: str, db: connect) -> List[Dict]:
     sql = """
 SELECT pi.Investigator_Id, FirstName, Surname, Partner_Name, InstituteName_Name, Department, Url, Leader_Id, Contact_Id FROM ProposalInvestigator AS pi
     JOIN ProposalCode AS pc ON pi.ProposalCode_Id = pc.ProposalCode_Id
@@ -60,7 +60,7 @@ WHERE Proposal_Code = %(proposal_code)s
                 ) for r in rs]
 
 
-def get_proposal_allocations(proposal_code: str, semester: Semester, db: connect) -> List[Dict]:
+async def get_proposal_allocations(proposal_code: str, semester: Semester, db: connect) -> List[Dict]:
     sql = """
 SELECT Partner_Code, Partner_Name, Priority ,TimeAlloc, TacComment FROM MultiPartner AS mp
     JOIN ProposalCode AS pc ON mp.ProposalCode_Id = pc.ProposalCode_Id
@@ -96,7 +96,7 @@ WHERE Proposal_Code = %(proposal_code)s AND s.Year = %(year)s AND s.Semester = %
                 return [_alloc[r] for r in _alloc]
 
 
-def get_proposal_targets(proposal_code: str, db: connect) -> List[Dict]:
+async def get_proposal_targets(proposal_code: str, db: connect) -> List[Dict]:
     sql = """
 SELECT Target_Name, RaH, RaM, RaS, DecSign, DecD, DecM, DecS, Equinox, MinMag, MaxMag, TargetType, TargetSubType, 
     Optional, NVisits, MaxLunarPhase, Ranking, NightCount, MoonProbability, CompetitionProbability, 
@@ -147,7 +147,7 @@ WHERE Proposal_Code = %(proposal_code)s
                 ) for r in rs]
 
 
-def get_observed_targets(proposal_code: str, db: connect) -> List[Dict]:
+async def get_observed_targets(proposal_code: str, db: connect) -> List[Dict]:
 
     sql = """
 SELECT bv.Block_Id, Block_Name, p.ObsTime, Priority, MaxLunarPhase, Target_Name, `Date`, BlockVisitStatus
@@ -179,17 +179,17 @@ WHERE Proposal_Code = %(proposal_code)s
                     target_name=r[5],
                     observation_date=r[6],
                     block_visit_status=r[7],
-                    block_rejection_reason=r[8],
+                    block_rejection_reason=r[8]
                 ) for r in rs]
 
 
-def get_proposal_requested_time(proposal_code: str, db: connect) -> List[None]:
-    requiested_time_sql = """
+async def get_proposal_requested_time(proposal_code: str, db: connect) -> List[dict]:
+    requested_time_sql = """
 SELECT TotalReqTime, P1MinimumUsefulTime, P1TimeComment, Year, Semester FROM Proposal as p
 JOIN ProposalCode AS pc ON p.ProposalCode_Id = pc.ProposalCode_Id
 JOIN P1MinTime AS pmt ON p.ProposalCode_Id = pmt.ProposalCode_Id
 JOIN Semester AS s ON s.Semester_Id = pmt.Semester_Id
-WHERE Proposal_Code = %(proposal_code)s    
+WHERE Proposal_Code = %(proposal_code)s AND `Current` = 1   
     """
     distribution_time_sql = """
 SELECT Year, Semester, Partner_Code, Partner_Name, ReqTimePercent FROM MultiPartner AS mp
@@ -202,13 +202,13 @@ WHERE Proposal_Code = %(proposal_code)s
     async with db.acquire() as conn:
         async with conn.cursor() as cur:
             await cur.execute(
-                requiested_time_sql,
+                requested_time_sql,
                 {"proposal_code": proposal_code}
             )
             rrs = await cur.fetchall()
             for r in rrs:
                 _sem = f"{r[3]}-{r[4]}"
-                if not ( _sem in requested_time):
+                if not (_sem in requested_time):
                     requested_time[_sem] = dict(
                         total_requested_time=r[0],
                         minimum_useful_time=r[1],
@@ -230,11 +230,14 @@ WHERE Proposal_Code = %(proposal_code)s
                             share_percentage=r[4]
                         )
                     )
+            _req = []
+            for r in requested_time:
+                requested_time[r].update(semester=r)
+                _req.append(requested_time[r])
+    return _req
 
-    return [requested_time[r].update(semester=r) for r in requested_time]
 
-
-def get_observed_time(proposal_code: str, semester:Semester, db:connect):
+async def get_observed_time(proposal_code: str, semester:Semester, db:connect):
     sql = """
 SELECT SUM(ObsTime), Priority FROM BlockVisit AS bv
     JOIN `Block` AS b ON bv.Block_Id = b.Block_Id
