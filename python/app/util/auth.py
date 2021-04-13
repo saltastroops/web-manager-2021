@@ -69,7 +69,7 @@ def verify_password(password: str, hashed_password: str) -> bool:
 
 def get_password_hash(password: str) -> str:
     """Hash a plain text password."""
-    return hashlib.md5(password.encode("utf-8")).hexdigest()
+    return hashlib.md5(password.encode("utf-8")).hexdigest()  # nosec
 
 
 async def authenticate_user(username: str, password: str, db: Pool) -> Optional[User]:

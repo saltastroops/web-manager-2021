@@ -3,27 +3,6 @@ import os
 from pydantic import BaseSettings
 
 
-def _get_env_file() -> str:
-    """`The environment variable file name for the mode the server is running in."""
-    mode = os.getenv("MODE")
-    if mode is None:
-        raise ValueError(
-            "The MODE environment variable is not set. Please refer to "
-            "the documentation for more details."
-        )
-
-    mode = mode.lower()
-    if mode == "production":
-        return ".env"
-    elif mode == "test":
-        return ".env.test"
-    else:
-        raise ValueError(
-            "The MODE environment variable has an unsupported value. "
-            "Please refer to the documentation for the available values."
-        )
-
-
 class Settings(BaseSettings):
     """
     Settings for the Web Manager.
@@ -42,4 +21,4 @@ class Settings(BaseSettings):
     secret_key: str
 
     class Config:
-        env_file = _get_env_file()
+        env_file = os.getenv("DOTENV_FILE", ".env")
