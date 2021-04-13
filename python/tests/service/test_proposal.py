@@ -2,7 +2,7 @@
 import pytest
 
 from app.service.proposal import get_proposal_text, get_proposal_allocations, get_proposal_requested_time, \
-    get_observed_time
+    get_observed_time, get_observed_targets
 from tests.markers import nodatabase
 from aiomysql import Pool
 from app.models.pydantic import Semester
@@ -68,3 +68,27 @@ async def test_get_observed_time_return_correct_time(db: Pool) -> None:
     assert observed_time["priority_2"] == 18297
     assert observed_time["priority_3"] == 33605
     assert observed_time["priority_4"] == 37756
+
+
+@nodatabase
+@pytest.mark.asyncio
+async def test_get_observed_targets_return_correct_targets(db: Pool) -> None:
+    """get_observed_targets return correct proposal text"""
+    observed_targets = await get_observed_targets("2020-1-MLT-003", db)
+    assert len(observed_targets) == 29
+    sot = sorted(observed_targets, key=lambda i: i['block_id'])
+    assert sot[0]["block_code"] == 82583
+    assert sot[0]["block_name"] == "730224776306_Med_Res"
+    assert sot[0]["target_name"] == '730224776306 Medium Res'
+    assert sot[0]["observation_date"] == '2020-07-18'
+
+    assert sot[9]["block_code"] == 85981
+    assert sot[9]["block_name"] == '730226139133_Med_Res'
+    assert sot[9]["target_name"] == '730226139133 Medium Res'
+    assert sot[9]["observation_date"] == '2020-12-19'
+
+    assert sot[20]["block_code"] == 85999
+    assert sot[20]["block_name"] == '730161469909_Med_Res'
+    assert sot[20]["target_name"] == '730161469909 Medium Res'
+    assert sot[20]["observation_date"] == '2021-01-13'
+
