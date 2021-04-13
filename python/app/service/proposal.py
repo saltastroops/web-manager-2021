@@ -1,6 +1,7 @@
 from typing import Dict, List
 from aiomysql import connect
-from util import Semester
+
+from app.models.pydantic import Semester
 
 
 async def get_proposal_text(proposal_code: str, semester: Semester, db: connect) -> Dict:
