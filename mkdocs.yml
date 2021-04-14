@@ -15,6 +15,7 @@ nav:
 
 plugins:
   - macros
+  - search
 
 site_name: SALT Web Manager
 

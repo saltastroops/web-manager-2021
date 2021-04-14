@@ -80,8 +80,11 @@ def proposals(user: User = Depends(get_current_user)) -> Response:
 
 
 @router.get("/proposals/{proposal_code}", response_class=HTMLResponse)
-def proposal(
-    request: Request, proposal_code: str, user: User = Depends(get_current_user)
+async def proposal(
+    request: Request,
+    proposal_code: str,
+    user: User = Depends(get_current_user),
+    db: Pool = Depends(get_db),
 ) -> Response:
     return templates.TemplateResponse(
         "proposal.html",
