@@ -137,3 +137,4 @@ node_modules/
 *.iml
 /e2e/cypress/videos
 /e2e/cypress/screenshots
+/.env.deployment
