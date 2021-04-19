@@ -9,9 +9,15 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse, RedirectResponse, Response
 from starlette.templating import Jinja2Templates
 
-from app.dependencies import get_current_user, get_db, get_settings
+from app.dependencies import (
+    get_current_user,
+    get_db,
+    get_semester,
+    get_settings,
+)
 from app.jinja2.filters import autoversion
-from app.models.pydantic import User
+from app.models.pydantic import Semester, User
+from app.service import block as block_service
 from app.settings import Settings
 from app.util import auth
 
@@ -83,15 +89,16 @@ def proposals(user: User = Depends(get_current_user)) -> Response:
 async def proposal(
     request: Request,
     proposal_code: str,
+    semester: Semester = Depends(get_semester),
     user: User = Depends(get_current_user),
     db: Pool = Depends(get_db),
 ) -> Response:
+    block_codes = await block_service.get_block_codes(proposal_code, semester, db)
     return templates.TemplateResponse(
         "proposal.html",
         {
             "request": request,
             "proposal_code": proposal_code,
-            "initial_block": "<h2>This is the initial block.</h2>",
-            "block_codes": ["abcd9876", "pdgh", "356hcdfth", "kh895gght"],
+            "block_codes": block_codes,
         },
     )
