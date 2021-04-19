@@ -6,50 +6,50 @@ from aiomysql import Pool
 
 from app.models.pydantic import Semester
 from app.service.proposal import (
-    get_observed_targets,
+    get_block_visits,
     get_observed_time,
-    get_proposal_allocations,
-    get_proposal_requested_time,
-    get_proposal_text,
+    get_time_allocations,
+    get_requested_time,
+    get_text_content, get_investigators,
 )
 from tests.markers import nodatabase
 
 
 @nodatabase
 @pytest.mark.asyncio
-async def test_get_proposal_text_return_correct_text(db: Pool) -> None:
-    """get_proposal_text return correct proposal text"""
-    proposal_text = await get_proposal_text(
+async def test_get_text_content_return_correct_text(db: Pool) -> None:
+    """get_text_content return correct proposal text"""
+    proposal_text = await get_text_content(
         "2020-1-MLT-005", Semester(semester=1, year=2020), db
     )
-    assert "and Kinematics of Multi-phase Gas" in proposal_text["title"]
+    assert "and Kinematics of Multi-phase Gas" in proposal_text.title
     assert (
-        "providing an excellent tracer of dynamical mass" in proposal_text["abstract"]
+        "providing an excellent tracer of dynamical mass" in proposal_text.abstract
     )
-    assert "Specific notes and instructions to observer:" in proposal_text["read_me"]
+    assert "Specific notes and instructions to observer:" in proposal_text.read_me
 
 
 @nodatabase
 @pytest.mark.asyncio
 async def test_get_proposal_allocations_return_correct_allocations(db: Pool) -> None:
-    """get_proposal_allocations return correct allocations."""
-    proposal_allocations = await get_proposal_allocations(
+    """get_time_allocations return correct allocations."""
+    proposal_allocations = await get_time_allocations(
         "2020-1-MLT-005", Semester(semester=2, year=2020), db
     )
     for a in proposal_allocations:
-        if a["partner_code"] == "UW":
+        if a["partner"].code == "UW":
             assert a["priority_0"] == 0
             assert a["priority_1"] == 55781
             assert a["priority_2"] == 0
             assert a["priority_3"] == 0
             assert a["priority_4"] == 0
-        if a["partner_code"] == "RU":
+        if a["partner"].code == "RU":
             assert a["priority_0"] == 0
             assert a["priority_1"] == 0
             assert a["priority_2"] == 0
             assert a["priority_3"] == 0
             assert a["priority_4"] == 0
-        if not a["partner_code"] in ["UW", "RU"]:
+        if not a["partner"].code in ["UW", "RU"]:
             assert False
 
 
@@ -58,22 +58,28 @@ async def test_get_proposal_allocations_return_correct_allocations(db: Pool) -> 
 async def test_get_proposal_requested_time_return_correct_requested_time(
     db: Pool,
 ) -> None:
-    """get_proposal_requested_time return correct requested time."""
-    proposal_requested_time = await get_proposal_requested_time("2021-1-MLT-005", db)
+    """get_requested_time return correct requested time."""
+    proposal_requested_time = await get_requested_time("2021-1-MLT-005", 10497, db)
     assert len(proposal_requested_time) == 4
     for r in proposal_requested_time:
-        if r["semester"] == "2021-1":
-            assert r["total_requested_time"] == 127000
-            assert r["minimum_useful_time"] == 20000
-            assert r["time_comment"].startswith("Minimum useful time is based")
         if (
-            r["semester"] == "2022-1"
-            or r["semester"] == "2021-2"
-            or r["semester"] == "2022-2"
+            r.semester == Semester(year=2021, semester=1)
+            or r.semester == Semester(year=2022, semester=1)
         ):
-            assert r["total_requested_time"] == 127000
-            assert r["minimum_useful_time"] == 20000
-        if not r["semester"] in ["2021-1", "2021-2", "2022-1", "2022-2"]:
+            assert r.total_requested_time == 127000
+            assert r.minimum_useful_time == 20000
+        if (
+            r.semester == Semester(year=2021, semester=2)
+            or r.semester == Semester(year=2022, semester=2)
+        ):
+            assert r.total_requested_time == 76000
+            assert r.minimum_useful_time == 20000
+        if not r.semester in [
+            Semester(year=2021, semester=1),
+            Semester(year=2021, semester=2),
+            Semester(year=2022, semester=1),
+            Semester(year=2022, semester=2),
+            "2021-2", "2022-1", "2022-2"]:
             assert False
 
 
@@ -94,22 +100,32 @@ async def test_get_observed_time_return_correct_time(db: Pool) -> None:
 @nodatabase
 @pytest.mark.asyncio
 async def test_get_observed_targets_return_correct_targets(db: Pool) -> None:
-    """get_observed_targets return correct targets."""
+    """get_block_visits return correct targets."""
 
-    observed_targets = await get_observed_targets("2020-1-MLT-005", db)
-    assert len(observed_targets) == 29
-    sot = sorted(observed_targets, key=lambda i: i["block_id"])
-    assert sot[0]["block_id"] == 82583
-    assert sot[0]["block_name"] == "730224776306_Med_Res"
-    assert sot[0]["target_name"] == "730224776306 Medium Res"
-    assert sot[0]["observation_date"] == date(year=2020, month=7, day=18)
+    observed_targets = await get_block_visits("2017-1-SCI-005", db)
+    assert len(observed_targets) == 14
+    sot = sorted(observed_targets, key=lambda i: i.block_id)
+    assert sot[0].block_id == 56305
+    assert sot[0].block_name == "Block for SN2017cbv"
+    assert sot[0].target_name == "SN2017cbv"
+    assert sot[0].observation_date == date(2017, 5, 14)
 
-    assert sot[9]["block_id"] == 85981
-    assert sot[9]["block_name"] == "730226139133_Med_Res"
-    assert sot[9]["target_name"] == "730226139133 Medium Res"
-    assert sot[9]["observation_date"] == date(year=2020, month=12, day=19)
+    assert sot[9].block_id == 60478
+    assert sot[9].block_name == "Block for SN2017cbv - Red3"
+    assert sot[9].target_name == "SN2017cbv"
+    assert sot[9].observation_date == date(2017, 7, 24)
 
-    assert sot[20]["block_id"] == 85999
-    assert sot[20]["block_name"] == "730161469909_Med_Res"
-    assert sot[20]["target_name"] == "730161469909 Medium Res"
-    assert sot[20]["observation_date"] == date(year=2021, month=1, day=13)
+    assert sot[10].block_id == 60479
+    assert sot[10].block_name == "Block for SN2017cbv - Blue3"
+    assert sot[10].target_name == "SN2017cbv"
+    assert sot[10].observation_date == date(2017, 7, 26)
+
+@nodatabase
+@pytest.mark.asyncio
+async def test_get_text_content_return_correct_text(db: Pool) -> None:
+    """get_text_content return correct proposal text"""
+    proposal_text = await get_investigators(
+        "2020-1-MLT-005", db
+    )
+    print(">>>: ", proposal_text)
+    assert True
