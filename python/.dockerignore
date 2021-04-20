@@ -1,3 +1,7 @@
+.git
+
+.venv/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -135,6 +139,7 @@ node_modules/
 # IntelliJ
 .idea
 *.iml
+
+# Cypress
 /e2e/cypress/videos
 /e2e/cypress/screenshots
-/.env.deployment
