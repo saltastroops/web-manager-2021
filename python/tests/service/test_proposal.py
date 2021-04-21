@@ -103,29 +103,20 @@ async def test_get_observed_targets_return_correct_targets(db: Pool) -> None:
     """get_block_visits return correct targets."""
 
     observed_targets = await get_block_visits("2017-1-SCI-005", db)
-    assert len(observed_targets) == 14
+    assert len(observed_targets) == 12
     sot = sorted(observed_targets, key=lambda i: i.block_id)
     assert sot[0].block_id == 56305
     assert sot[0].block_name == "Block for SN2017cbv"
     assert sot[0].target_name == "SN2017cbv"
     assert sot[0].observation_date == date(2017, 5, 14)
 
-    assert sot[9].block_id == 60478
-    assert sot[9].block_name == "Block for SN2017cbv - Red3"
+    assert sot[9].block_id == 60479
+    assert sot[9].block_name == "Block for SN2017cbv - Blue3"
     assert sot[9].target_name == "SN2017cbv"
-    assert sot[9].observation_date == date(2017, 7, 24)
+    assert sot[9].observation_date == date(2017, 7, 26)
 
-    assert sot[10].block_id == 60479
-    assert sot[10].block_name == "Block for SN2017cbv - Blue3"
-    assert sot[10].target_name == "SN2017cbv"
-    assert sot[10].observation_date == date(2017, 7, 26)
+    assert sot[10].block_id == 62760
+    assert sot[10].block_name == "Block for SN2017bzc - Blue4"
+    assert sot[10].target_name == "SN2017bzc"
+    assert sot[10].observation_date == date(2017, 8, 26)
 
-@nodatabase
-@pytest.mark.asyncio
-async def test_get_text_content_return_correct_text(db: Pool) -> None:
-    """get_text_content return correct proposal text"""
-    proposal_text = await get_investigators(
-        "2020-1-MLT-005", db
-    )
-    print(">>>: ", proposal_text)
-    assert True

@@ -1,8 +1,8 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List
 
 from aiomysql import connect
-# from astropy.coordinates import Angle
-# import astropy.units as u
+from astropy.coordinates import Angle
+import astropy.units as u
 
 from app.models.proposal_model import TextContent, Investigator, Affiliation, \
     BlockVisit, Partner, Target, RequestedTime
@@ -20,7 +20,7 @@ WHERE Proposal_Code = %(proposal_code)s
     AND s.Year = %(year)s AND s.Semester = %(semester)s
     """
     async with db.acquire() as conn:
-        async with conn.dictcursor() as cur:
+        async with conn.cursor() as cur:
             await cur.execute(
                 sql,
                 {
@@ -119,65 +119,65 @@ WHERE Proposal_Code = %(proposal_code)s
     raise ValueError(f"Targets for proposal {proposal_code} couldn't be found")
 
 
-# async def get_phase_1_targets(proposal_code: str, db: connect) -> List[Target]:
-#     sql = """
-# SELECT Target_Name, RaH, RaM, RaS, DecSign, DecD, DecM, DecS, Equinox, MinMag, MaxMag-10,
-#     TargetType, TargetSubType, Optional, NVisits, MaxLunarPhase, Ranking, NightCount,
-#     MoonProbability, CompetitionProbability, ObservabilityProbability-20, SeeingProbability,
-#     Identifier, OutputInterval, RaDot, DecDot, Epoch
-# FROM P1ProposalTarget AS pt
-#     JOIN ProposalCode AS pc ON pt.ProposalCode_Id = pc.ProposalCode_Id
-#     JOIN Target AS ta ON ta.Target_Id = pt.Target_Id
-#     JOIN TargetCoordinates AS tc ON ta.TargetCoordinates_Id = tc.TargetCoordinates_Id
-#     JOIN TargetMagnitudes AS tm ON ta.TargetMagnitudes_Id = tm.TargetMagnitudes_Id
-#     JOIN TargetSubType AS tst ON ta.TargetSubType_Id = tst.TargetSubType_Id
-#     JOIN TargetType AS tt ON tst.TargetType_Id = tt.TargetType_Id
-#     LEFT JOIN PiRanking AS pr ON pr.PiRanking_Id = pt.PiRanking_Id
-#     LEFT JOIN P1TargetProbabilities AS tp ON tp.Target_Id = ta.Target_Id
-#     LEFT JOIN HorizonsTarget AS ht ON ht.HorizonsTarget_Id = ta.HorizonsTarget_Id
-#     LEFT JOIN MovingTarget AS mt ON mt.MovingTarget_Id = ta.MovingTarget_Id
-# WHERE Proposal_Code = %(proposal_code)s
-#     """
-#     async with db.acquire() as conn:
-#         async with conn.cursor() as cur:
-#             await cur.execute(sql, {"proposal_code": proposal_code})
-#             rs = await cur.fetchall()
-#             if rs:
-#                 return [
-#                     Target(
-#                         name=r[0],
-#                         ra=Angle(f"{r[1]}:{r[2]}:{r[3]} hours").degree * u.deg,
-#                         dec=Angle(f"{r[4]}{r[5]}:{r[6]}:{r[7]} degrees").degree * u.deg,
-#                         equinox=r[8],
-#                         minimun_magnitude=r[9],
-#                         maximun_magnitude=r[10],
-#                         target_type=r[11],
-#                         sub_type=r[12],
-#                         is_optional=r[13] == 1,
-#                         n_visits=r[14],
-#                         max_luner_phase=r[15],
-#                         ranking=r[16],
-#                         night_count=r[17],
-#                         moon_probability=r[18],
-#                         competition_probability=r[19],
-#                         observability_probability=r[20],
-#                         seeing_probability=r[21],
-#                         identifier=r[22],
-#                         output_interval=r[23],
-#                         ra_dot=Angle(r[24]),  # Todo units of this two please
-#                         dec_dot=Angle(r[25]),  # Todo units of this two please
-#                         epoch=r[26]
-#                     )
-#                     for r in rs
-#                 ]
-#     raise ValueError(f"Targets for proposal {proposal_code} couldn't be found")
+async def get_phase_1_targets(proposal_code: str, db: connect) -> List[Target]:
+    sql = """
+SELECT Target_Name, RaH, RaM, RaS, DecSign, DecD, DecM, DecS, Equinox, MinMag, MaxMag,
+    TargetType, TargetSubType, Optional, NVisits, MaxLunarPhase, Ranking, NightCount,
+    MoonProbability, CompetitionProbability, ObservabilityProbability,
+    SeeingProbability, Identifier, OutputInterval, RaDot, DecDot, Epoch
+FROM P1ProposalTarget AS pt
+    JOIN ProposalCode AS pc ON pt.ProposalCode_Id = pc.ProposalCode_Id
+    JOIN Target AS ta ON ta.Target_Id = pt.Target_Id
+    JOIN TargetCoordinates AS tc ON ta.TargetCoordinates_Id = tc.TargetCoordinates_Id
+    JOIN TargetMagnitudes AS tm ON ta.TargetMagnitudes_Id = tm.TargetMagnitudes_Id
+    JOIN TargetSubType AS tst ON ta.TargetSubType_Id = tst.TargetSubType_Id
+    JOIN TargetType AS tt ON tst.TargetType_Id = tt.TargetType_Id
+    LEFT JOIN PiRanking AS pr ON pr.PiRanking_Id = pt.PiRanking_Id
+    LEFT JOIN P1TargetProbabilities AS tp ON tp.Target_Id = ta.Target_Id
+    LEFT JOIN HorizonsTarget AS ht ON ht.HorizonsTarget_Id = ta.HorizonsTarget_Id
+    LEFT JOIN MovingTarget AS mt ON mt.MovingTarget_Id = ta.MovingTarget_Id
+WHERE Proposal_Code = %(proposal_code)s
+    """
+    async with db.acquire() as conn:
+        async with conn.cursor() as cur:
+            await cur.execute(sql, {"proposal_code": proposal_code})
+            rs = await cur.fetchall()
+            if rs:
+                return [
+                    Target(
+                        name=r[0],
+                        ra=Angle(f"{r[1]}:{r[2]}:{r[3]} hours").degree * u.deg,
+                        dec=Angle(f"{r[4]}{r[5]}:{r[6]}:{r[7]} degrees").degree * u.deg,
+                        equinox=r[8],
+                        minimun_magnitude=r[9],
+                        maximun_magnitude=r[10],
+                        target_type=r[11],
+                        sub_type=r[12],
+                        is_optional=r[13] == 1,
+                        n_visits=r[14],
+                        max_luner_phase=r[15],
+                        ranking=r[16],
+                        night_count=r[17],
+                        moon_probability=r[18],
+                        competition_probability=r[19],
+                        observability_probability=r[20],
+                        seeing_probability=r[21],
+                        identifier=r[22],
+                        output_interval=r[23],
+                        ra_dot=Angle(r[24]) * u.arcsec/u.year,
+                        dec_dot=Angle(r[25]) * u.arcsec/u.year,
+                        epoch=r[26]
+                    )
+                    for r in rs
+                ]
+    raise ValueError(f"Targets for proposal {proposal_code} couldn't be found")
 
 
 async def get_block_visits(
     proposal_code: str, db: connect
 ) -> List[BlockVisit]:
 
-    sql = """
+    sql = """ 
 SELECT bv.Block_Id, Block_Name, p.ObsTime, Priority, MaxLunarPhase, Target_Name,
     `Date`, BlockVisitStatus, RejectedReason
 RejectedReason FROM BlockVisit AS bv
@@ -192,7 +192,8 @@ RejectedReason FROM BlockVisit AS bv
     LEFT JOIN BlockRejectedReason AS brr
         ON brr.BlockRejectedReason_Id = bv.BlockRejectedReason_Id
 WHERE Proposal_Code = %(proposal_code)s
-    """
+GROUP BY bv.Block_Id 
+    """  # TODO: can have more than one pointing and observation per block visit
     async with db.acquire() as conn:
         async with conn.cursor() as cur:
             await cur.execute(sql, {"proposal_code": proposal_code})

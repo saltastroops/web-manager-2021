@@ -1,5 +1,5 @@
 from datetime import date, datetime
-# from astropy.coordinates import Angle
+from astropy.coordinates import Angle
 from typing import Optional, List
 
 from pydantic import BaseModel, validator
@@ -72,10 +72,17 @@ class Partner(BaseModel):
     code: str
 
 
+class AstroAngle(BaseModel):
+    v: Angle
+
+    class Config:
+        arbitrary_types_allowed = True
+
+
 class Target(BaseModel):
     name: str
-    # ra: Optional[Angle]
-    # dec_sign: Optional[Angle]
+    ra: Optional[AstroAngle]
+    dec_sign: Optional[AstroAngle]
     dec: str
     equinox: float
     minimum_magnitude: float
@@ -93,8 +100,8 @@ class Target(BaseModel):
     seeing_probability: int
     identifier: Optional[str]
     output_interval: Optional[int]
-    # ra_dot: Optional[Ang]le
-    # dec_dot: Optional[Ang]le
+    ra_dot: Optional[AstroAngle]
+    dec_dot: Optional[AstroAngle]
     epoch: Optional[datetime]
 
 
