@@ -1,0 +1,19 @@
+# Docker Compose file for building and launching the Web Manager
+
+# WARNING: This Dockerfile is not suitable for production use.
+
+version: "3"
+
+services:
+  webmanager:
+    build:
+      context: .
+    env_file:
+      - .env
+    environment:
+      - PROPOSALS_BASE_DIR=${PROPOSALS_BASE_DIR}
+    ports:
+      - 1234:80
+    restart: always
+    volumes:
+      - ${PROPOSALS_BASE_DIR}:/proposals

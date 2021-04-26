@@ -343,3 +343,36 @@ may_view_proposal = view_proposal.is_permitted_for(user)
 # alternatively (and preferred):
 may_view_proposal = user.is_permitted_to(view_proposal)
 ```
+
+## Deployment
+
+The root folder of the project contains a Bash script `deploy.sh` for deploying the code to a development or production server. Before using the script, you must set up the remote server to have git and docker-compose, and the latter must be executable without sudo for the remote user. You must clone the GitHub repository on the server and add a `.env` file in the `python` folder, as described above.
+
+!!! tip
+    The easiest way to avoid the need for using sudo with docker-compose is to [add the remote user to the `docker` group](https://docs.docker.com/engine/install/linux-postinstall/).
+
+In case of deploying to a development server the deployment requires the following environment variables to be set.
+
+Variable name | Description | Example
+--- | --- | ---
+DEVELOPMENT_SERVER_HOST | The address of the development server. | wmdev.example.com
+DEVELOPMENT_SERVER_USER | The username of remote user used for deploying. | deployment
+DEVELOPMENT_SERVER_PROJECT_ROOT | The path of the project's root directory on the development server. (This is the folder containing the `.git` folder.) | /path/to/webmanager
+
+Similarly, in case of deploying to a production server the following environment variables are required.
+
+Variable name | Description | Example
+--- | --- | ---
+PRODUCTION_SERVER_HOST | The address of the production server. | wm.example.com
+PRODUCTION_SERVER_USER | The username of the remote user used for deploying. | deployment
+PRODUCTION_SERVER_PROJECT_ROOT | The path of the project's root directory on the production server. (This is the folder containing the `.git` folder.) | /path/to/webmanager
+
+The script accepts the following command line options, all of which are optional.
+
+Option | Description | Default if not used
+--- | --- | ---
+-b GIT_BRANCH | Choose GIT_BRANCH as the git branch to deploy. | development for development, main for production
+-e ENV_FILE | Environment variable file. | .env.deployment
+-p | Deploy to a production server. | Deploy to a development server.
+
+You may set the environment variables outside an environment variable file. The script will issue a warning but will not fail if the environment variable file does not exist.
