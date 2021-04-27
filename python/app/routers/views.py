@@ -11,7 +11,7 @@ from starlette.templating import Jinja2Templates
 
 from app.dependencies import get_current_user, get_db, get_settings
 from app.jinja2.filters import autoversion
-from app.models.pydantic import User
+from app.models.general import User
 from app.settings import Settings
 from app.util import auth
 

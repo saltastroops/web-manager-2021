@@ -17,7 +17,7 @@ from jose import jwt
 from starlette.requests import Request
 from starlette.status import HTTP_401_UNAUTHORIZED
 
-from app.models.pydantic import AccessToken, User
+from app.models.general import AccessToken, User
 from app.service import user as user_service
 
 ALGORITHM = "HS256"

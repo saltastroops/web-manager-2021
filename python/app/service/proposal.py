@@ -1,12 +1,20 @@
 from typing import Any, Dict, List
 
+import astropy.units as u
 from aiomysql import connect
 from astropy.coordinates import Angle
-import astropy.units as u
 
-from app.models.proposal_model import TextContent, Investigator, Affiliation, \
-    BlockVisit, Partner, Target, RequestedTime
-from app.models.pydantic import Semester
+from app.models.general import Semester
+from app.models.proposal import (
+    BlockVisit,
+    Institute,
+    Investigator,
+    Partner,
+    PersonalDetails,
+    Phase1Target,
+    RequestedTime,
+    TextContent,
+)
 
 
 async def get_text_content(
@@ -40,12 +48,10 @@ WHERE Proposal_Code = %(proposal_code)s
     raise ValueError(f"Proposal content of {proposal_code} could not be found.")
 
 
-async def get_investigators(
-    proposal_code: str, db: connect
-) -> List[Investigator]:
+async def get_investigators(proposal_code: str, db: connect) -> List[Investigator]:
     sql = """\
 SELECT pi.Investigator_Id, FirstName, Surname, Partner_Name, InstituteName_Name,
-        Department, Url, Leader_Id, Contact_Id, Partner_Code 
+        Department, Url, Leader_Id, Contact_Id, Partner_Code, Email 
 FROM ProposalInvestigator AS pi
     JOIN ProposalCode AS pc ON pi.ProposalCode_Id = pc.ProposalCode_Id
     JOIN Investigator AS inv ON inv.Investigator_Id = pi.Investigator_Id
@@ -64,14 +70,15 @@ WHERE Proposal_Code = %(proposal_code)s
                     Investigator(
                         is_pc=r[0] == r[8],
                         is_pi=r[0] == r[7],
-                        name=f"{r[2]} {r[1]}",
-                        affiliation=Affiliation(
-                            partner_code=r[9],
-                            partner_name=r[3],
-                            institute=r[4],
+                        personal_details=PersonalDetails(
+                            given_name=r[1], family_name=r[2], email=r[-1]
+                        ),
+                        affiliation=Institute(
+                            partner=Partner(code=r[9], name=r[3]),
+                            name=r[4],
                             department=r[5],
-                            home_page=r[6]
-                        )
+                            home_page=r[6],
+                        ),
                     )
                     for r in rs
                 ]
@@ -108,10 +115,7 @@ WHERE Proposal_Code = %(proposal_code)s
                 for r in rs:
                     if not (r[0] in _alloc):
                         _alloc[r[0]] = {
-                            "partner": Partner(
-                                name=r[1],
-                                code=r[0]
-                            ),
+                            "partner": Partner(name=r[1], code=r[0]),
                             "tac_comment": r[4],
                         }
                     _alloc[r[0]][f"priority_{r[2]}"] = r[3]
@@ -119,7 +123,7 @@ WHERE Proposal_Code = %(proposal_code)s
     raise ValueError(f"Targets for proposal {proposal_code} couldn't be found")
 
 
-async def get_phase_1_targets(proposal_code: str, db: connect) -> List[Target]:
+async def get_phase_1_targets(proposal_code: str, db: connect) -> List[Phase1Target]:
     sql = """
 SELECT Target_Name, RaH, RaM, RaS, DecSign, DecD, DecM, DecS, Equinox, MinMag, MaxMag,
     TargetType, TargetSubType, Optional, NVisits, MaxLunarPhase, Ranking, NightCount,
@@ -144,43 +148,37 @@ WHERE Proposal_Code = %(proposal_code)s
             rs = await cur.fetchall()
             if rs:
                 return [
-                    Target(
+                    Phase1Target(
                         name=r[0],
-                        ra=Angle(f"{r[1]}:{r[2]}:{r[3]} hours").degree * u.deg,
-                        dec=Angle(f"{r[4]}{r[5]}:{r[6]}:{r[7]} degrees").degree * u.deg,
+                        right_ascension=Angle(f"{r[1]}:{r[2]}:{r[3]} hours"),
+                        declination=Angle(f"{r[4]}{r[5]}:{r[6]}:{r[7]} degrees"),
                         equinox=r[8],
-                        minimun_magnitude=r[9],
-                        maximun_magnitude=r[10],
+                        minimum_magnitude=r[9],
+                        maximum_magnitude=r[10],
                         target_type=r[11],
-                        sub_type=r[12],
+                        target_subtype=r[12],
                         is_optional=r[13] == 1,
                         n_visits=r[14],
-                        max_luner_phase=r[15],
+                        max_lunar_phase=r[15],
                         ranking=r[16],
                         night_count=r[17],
                         moon_probability=r[18],
                         competition_probability=r[19],
                         observability_probability=r[20],
                         seeing_probability=r[21],
-                        identifier=r[22],
-                        output_interval=r[23],
-                        ra_dot=Angle(r[24]) * u.arcsec/u.year,
-                        dec_dot=Angle(r[25]) * u.arcsec/u.year,
-                        epoch=r[26]
+                        horizons_identifier=r[22],
                     )
                     for r in rs
                 ]
     raise ValueError(f"Targets for proposal {proposal_code} couldn't be found")
 
 
-async def get_block_visits(
-    proposal_code: str, db: connect
-) -> List[BlockVisit]:
+async def get_block_visits(proposal_code: str, db: connect) -> List[BlockVisit]:
 
     sql = """ 
 SELECT bv.Block_Id, Block_Name, p.ObsTime, Priority, MaxLunarPhase, Target_Name,
     `Date`, BlockVisitStatus, RejectedReason
-RejectedReason FROM BlockVisit AS bv
+    FROM BlockVisit AS bv
     JOIN `Block` AS b ON b.Block_Id = bv.Block_Id
     JOIN ProposalCode AS pc ON pc.ProposalCode_Id = b.ProposalCode_Id
     JOIN NightInfo AS ni ON ni.NightInfo_Id = bv.NightInfo_Id
@@ -205,9 +203,11 @@ GROUP BY bv.Block_Id
                         block_name=r[1],
                         observed_time=r[2],
                         priority=r[3],
-                        max_luner_phase=r[4],
-                        target_name=r[5],
-                        observation_date=r[6],
+                        max_lunar_phase=r[4],
+                        target_names=[
+                            r[5]
+                        ],  # TODO: Handle multiple targets (or rule them out).
+                        observation_night=r[6],
                         status=r[7],
                         rejection_reason=r[8],
                     )
@@ -218,7 +218,7 @@ GROUP BY bv.Block_Id
 
 async def get_total_requested_time(
     proposal_code: str, db: connect
-) -> List[BlockVisit]:
+) -> List[RequestedTime]:
 
     sql = """
 SELECT SUM(p1rt.P1RequestedTime) AS total_requested_time
@@ -231,20 +231,8 @@ GROUP BY p1rt.Proposal_Id, p1rt.Semester_Id
             await cur.execute(sql, {"proposal_code": proposal_code})
             rs = await cur.fetchall()
             if rs:
-                return [
-                    BlockVisit(
-                        block_id=r[0],
-                        block_name=r[1],
-                        observed_time=r[2],
-                        priority=r[3],
-                        max_luner_phase=r[4],
-                        target_name=r[5],
-                        observation_date=r[6],
-                        status=r[7],
-                        rejection_reason=r[8],
-                    )
-                    for r in rs
-                ]
+                # TODO: Needs to be completed.
+                return [RequestedTime(total_requested_time=r[0]) for r in rs]
     raise ValueError(f"Targets for proposal {proposal_code} couldn't be found")
 
 

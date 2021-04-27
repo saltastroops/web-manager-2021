@@ -7,7 +7,7 @@ from jose import jwt
 from requests import Session
 from starlette import status
 
-from app.models.pydantic import User
+from app.models.general import User
 from app.settings import Settings
 from app.util import auth
 from app.util.auth import ALGORITHM

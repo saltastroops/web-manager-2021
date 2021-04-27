@@ -3,7 +3,7 @@ from typing import List
 
 import pytest
 
-from app.models.pydantic import User
+from app.models.general import User
 from app.util.permission import Permission
 from app.util.role import Role
 

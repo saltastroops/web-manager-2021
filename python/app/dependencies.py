@@ -5,7 +5,7 @@ from fastapi import Depends, HTTPException
 from jose import JWTError, jwt
 from starlette import status
 
-from app.models.pydantic import User
+from app.models.general import User
 from app.service import user as user_service
 from app.settings import Settings
 from app.util.auth import ALGORITHM, OAuth2TokenOrCookiePasswordBearer

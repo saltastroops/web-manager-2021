@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 
 from app.dependencies import get_current_user, get_db, get_settings
-from app.models.pydantic import AccessToken, User
+from app.models.general import AccessToken, User
 from app.service import block
 from app.settings import Settings
 from app.util import auth

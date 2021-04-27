@@ -3,7 +3,7 @@
 import pytest
 from aiomysql import Pool
 
-from app.models.pydantic import User
+from app.models.general import User
 from app.service import user as user_service
 from tests.markers import nodatabase
 

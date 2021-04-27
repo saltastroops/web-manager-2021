@@ -8,7 +8,7 @@ from fastapi import HTTPException
 from jose import jwt
 
 from app.dependencies import get_current_user, get_settings
-from app.models.pydantic import UserInDB
+from app.models.general import UserInDB
 from app.service import user as user_service
 from app.settings import Settings
 

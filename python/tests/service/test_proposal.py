@@ -4,13 +4,14 @@ from datetime import date
 import pytest
 from aiomysql import Pool
 
-from app.models.pydantic import Semester
+from app.models.general import Semester
 from app.service.proposal import (
     get_block_visits,
+    get_investigators,
     get_observed_time,
-    get_time_allocations,
     get_requested_time,
-    get_text_content, get_investigators,
+    get_text_content,
+    get_time_allocations,
 )
 from tests.markers import nodatabase
 
@@ -23,9 +24,7 @@ async def test_get_text_content_return_correct_text(db: Pool) -> None:
         "2020-1-MLT-005", Semester(semester=1, year=2020), db
     )
     assert "and Kinematics of Multi-phase Gas" in proposal_text.title
-    assert (
-        "providing an excellent tracer of dynamical mass" in proposal_text.abstract
-    )
+    assert "providing an excellent tracer of dynamical mass" in proposal_text.abstract
     assert "Specific notes and instructions to observer:" in proposal_text.read_me
 
 
@@ -62,15 +61,13 @@ async def test_get_proposal_requested_time_return_correct_requested_time(
     proposal_requested_time = await get_requested_time("2021-1-MLT-005", 10497, db)
     assert len(proposal_requested_time) == 4
     for r in proposal_requested_time:
-        if (
-            r.semester == Semester(year=2021, semester=1)
-            or r.semester == Semester(year=2022, semester=1)
+        if r.semester == Semester(year=2021, semester=1) or r.semester == Semester(
+            year=2022, semester=1
         ):
             assert r.total_requested_time == 127000
             assert r.minimum_useful_time == 20000
-        if (
-            r.semester == Semester(year=2021, semester=2)
-            or r.semester == Semester(year=2022, semester=2)
+        if r.semester == Semester(year=2021, semester=2) or r.semester == Semester(
+            year=2022, semester=2
         ):
             assert r.total_requested_time == 76000
             assert r.minimum_useful_time == 20000
@@ -79,7 +76,10 @@ async def test_get_proposal_requested_time_return_correct_requested_time(
             Semester(year=2021, semester=2),
             Semester(year=2022, semester=1),
             Semester(year=2022, semester=2),
-            "2021-2", "2022-1", "2022-2"]:
+            "2021-2",
+            "2022-1",
+            "2022-2",
+        ]:
             assert False
 
 
@@ -119,4 +119,3 @@ async def test_get_observed_targets_return_correct_targets(db: Pool) -> None:
     assert sot[10].block_name == "Block for SN2017bzc - Blue4"
     assert sot[10].target_name == "SN2017bzc"
     assert sot[10].observation_date == date(2017, 8, 26)
-
