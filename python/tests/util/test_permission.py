@@ -2,7 +2,7 @@
 import pytest
 from aiomysql import Pool
 
-from app.models.pydantic import User
+from app.models.general import User
 from app.util import permission
 from tests.markers import nodatabase
 

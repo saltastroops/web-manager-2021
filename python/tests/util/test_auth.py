@@ -11,7 +11,7 @@ from pydantic import BaseModel
 from starlette import status
 from starlette.requests import Request
 
-from app.models.pydantic import UserInDB
+from app.models.general import UserInDB
 from app.service import user as user_service
 from app.util import auth
 from app.util.auth import OAuth2TokenOrCookiePasswordBearer

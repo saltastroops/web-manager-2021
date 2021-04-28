@@ -297,9 +297,10 @@ The `app.util.permission` module provides an abstract base class `Permission`, w
 ```python
 from aiomysql import Pool
 
-from app.models.pydantic import User
+from app.models.general import User
 from app.util import role
 from app.util.permission import Permission
+
 
 class ViewProposal(Permission):
     """

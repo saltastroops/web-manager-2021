@@ -4,7 +4,7 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from aiomysql import Pool
 
-from app.models.pydantic import User
+from app.models.general import User
 from app.service import user as user_service
 from app.util import role
 

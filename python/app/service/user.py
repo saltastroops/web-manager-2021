@@ -1,7 +1,7 @@
 """User service."""
 from aiomysql import Pool
 
-from app.models.pydantic import User, UserInDB
+from app.models.general import User, UserInDB
 
 
 async def get_user(username: str, db: Pool) -> UserInDB:
