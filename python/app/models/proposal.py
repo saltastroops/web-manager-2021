@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 from astropy.coordinates import Angle
 from astropy.units import Quantity
@@ -252,3 +252,19 @@ class RequestedTime(BaseModel):
     time_comment: Optional[str]
     semester: Semester
     distribution: List
+
+
+class Proposal(BaseModel):
+    text_content: TextContent
+    investigators: List[Investigator]
+    block_visits: List[BlockVisit]
+    observed_time: Dict[str, Any]
+    time_allocations: TimeAllocations
+
+
+class Phase1Proposal(BaseModel):
+    text_content: TextContent
+    investigators: List[Investigator]
+    block_visits: List[BlockVisit]
+    observed_time: Dict[str, Any]
+    time_allocations: TimeAllocations

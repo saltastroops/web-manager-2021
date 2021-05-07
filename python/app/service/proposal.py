@@ -1,6 +1,5 @@
 from typing import Any, Dict, List
 
-import astropy.units as u
 from aiomysql import connect
 from astropy.coordinates import Angle
 
@@ -13,7 +12,7 @@ from app.models.proposal import (
     PersonalDetails,
     Phase1Target,
     RequestedTime,
-    TextContent,
+    TextContent, Proposal,
 )
 
 
@@ -49,7 +48,7 @@ WHERE Proposal_Code = %(proposal_code)s
 
 
 async def get_investigators(proposal_code: str, db: connect) -> List[Investigator]:
-    sql = """\
+    sql = """
 SELECT pi.Investigator_Id, FirstName, Surname, Partner_Name, InstituteName_Name,
         Department, Url, Leader_Id, Contact_Id, Partner_Code, Email 
 FROM ProposalInvestigator AS pi
@@ -167,6 +166,9 @@ WHERE Proposal_Code = %(proposal_code)s
                         observability_probability=r[20],
                         seeing_probability=r[21],
                         horizons_identifier=r[22],
+                        ra_dot=Angle(f"{r[24]} degrees"),
+                        dec_dot=Angle(f"{r[25]} degrees"),
+                        epoch=r[26],
                     )
                     for r in rs
                 ]
@@ -190,8 +192,9 @@ SELECT bv.Block_Id, Block_Name, p.ObsTime, Priority, MaxLunarPhase, Target_Name,
     LEFT JOIN BlockRejectedReason AS brr
         ON brr.BlockRejectedReason_Id = bv.BlockRejectedReason_Id
 WHERE Proposal_Code = %(proposal_code)s
-GROUP BY bv.Block_Id 
-    """  # TODO: can have more than one pointing and observation per block visit
+    """
+    # TODO This query does not support the a block visit with multiple observations
+    #  and pointing
     async with db.acquire() as conn:
         async with conn.cursor() as cur:
             await cur.execute(sql, {"proposal_code": proposal_code})
@@ -204,35 +207,14 @@ GROUP BY bv.Block_Id
                         observed_time=r[2],
                         priority=r[3],
                         max_lunar_phase=r[4],
-                        target_names=[
-                            r[5]
-                        ],  # TODO: Handle multiple targets (or rule them out).
+                        target_names=r[5],
+                        # TODO: Handle multiple targets (or rule them out).
                         observation_night=r[6],
                         status=r[7],
                         rejection_reason=r[8],
                     )
                     for r in rs
                 ]
-    raise ValueError(f"Targets for proposal {proposal_code} couldn't be found")
-
-
-async def get_total_requested_time(
-    proposal_code: str, db: connect
-) -> List[RequestedTime]:
-
-    sql = """
-SELECT SUM(p1rt.P1RequestedTime) AS total_requested_time
-FROM P1RequestedTime AS p1rt
-WHERE p1rt.Proposal_Id IN %(proposal_id)s
-GROUP BY p1rt.Proposal_Id, p1rt.Semester_Id
-    """
-    async with db.acquire() as conn:
-        async with conn.cursor() as cur:
-            await cur.execute(sql, {"proposal_code": proposal_code})
-            rs = await cur.fetchall()
-            if rs:
-                # TODO: Needs to be completed.
-                return [RequestedTime(total_requested_time=r[0]) for r in rs]
     raise ValueError(f"Targets for proposal {proposal_code} couldn't be found")
 
 
@@ -284,7 +266,9 @@ GROUP BY p1rt.Proposal_Id, p1rt.Semester_Id
             await cur.execute(distribution_time_sql, {"proposal_code": proposal_code})
             drs = await cur.fetchall()
             for r in drs:
-                if not (r[2] == "OTH"):  # TODO: raise error if oth allocated time
+                if r[2] == "OTH" and r[4] > 0:
+                    raise ValueError("The partner other should not have share time.")
+                if not (r[2] == "OTH"):
                     _sem = f"{r[0]}-{r[1]}"
                     requested_time[_sem].distribution.append(
                         dict(
@@ -331,3 +315,32 @@ GROUP BY Priority
             for r in rs:
                 observed_time[f"priority_{r[1]}"] = r[0]
             return observed_time
+
+
+def get_proposal(proposal_code, semester: Semester, db: connect):
+    text_content = get_text_content(proposal_code, semester, db)
+    investigators = get_investigators(proposal_code, db)
+    block_visits = get_block_visits(proposal_code, db)
+    observed_time = get_observed_time(proposal_code,semester, db)
+    time_allocations = get_time_allocations(proposal_code, semester, db)
+
+    return Proposal(
+        text_content=text_content,
+        investigators=investigators,
+        block_visits=block_visits,
+        observed_time=observed_time,
+        time_allocations=time_allocations
+    )
+
+
+def get_phase1_proposal(proposal_code: str,  db: connect):
+    async with db.acquire() as conn:
+        async with conn.cursor() as cur:
+            sql = """
+            
+            """
+            await cur.execute(sql, {"proposal_code": proposal_code})
+            rrs = await cur.fetchall()
+            for r in rrs:
+                pass
+    return
